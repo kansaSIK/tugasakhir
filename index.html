@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Kantin Sija</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* === CSS LOGIN MODERN & RAPI === */
+        :root {
+            --primary: #b07848; --primary-hover: #9b6a47; 
+            --bg-color: #fcf9f5; --card-bg: #ffffff; --text-color: #4a3b32;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0; padding: 0;
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at top right, #f4eadc 0%, transparent 40%),
+                              radial-gradient(circle at bottom left, #f4eadc 0%, transparent 40%);
+        }
+
+        .login-card {
+            background: var(--card-bg);
+            padding: 40px 30px;
+            border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(176, 120, 72, 0.15);
+            text-align: center;
+            width: 90%; max-width: 380px;
+            animation: slideUpFade 0.6s ease-out forwards;
+        }
+
+        @keyframes slideUpFade { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        .logo-icon { font-size: 55px; margin-bottom: 5px; display: inline-block; animation: bounceIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes bounceIn { 0% { transform: scale(0); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+
+        .login-card h1 { margin: 0; font-size: 34px; color: var(--primary); font-weight: 700; letter-spacing: -0.5px; }
+        .login-card p { color: #8b5a3c; font-size: 14px; margin: 5px 0 30px; opacity: 0.8; font-weight: 400; }
+
+        /* Desain Tombol */
+        .btn-main {
+            background: var(--primary); color: white; border: none; width: 100%; padding: 15px;
+            font-size: 16px; font-weight: 600; border-radius: 16px; cursor: pointer;
+            transition: all 0.3s ease; font-family: 'Poppins', sans-serif;
+            box-shadow: 0 6px 20px rgba(176, 120, 72, 0.35); outline: none; margin-bottom: 10px;
+        }
+        .btn-main:hover { background: var(--primary-hover); transform: translateY(-3px); box-shadow: 0 8px 25px rgba(176, 120, 72, 0.5); }
+        .btn-main:disabled { background: #ccc; cursor: not-allowed; transform: none; box-shadow: none; }
+        
+        .btn-back {
+            background: transparent; color: #8b5a3c; border: none; width: 100%; padding: 10px;
+            font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Poppins', sans-serif;
+        }
+        .btn-back:hover { text-decoration: underline; }
+
+        /* Form Input Styles */
+        .auth-form { display: none; animation: fadeIn 0.4s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        .input-group { margin-bottom: 15px; text-align: left; }
+        .input-group label { display: block; font-size: 13px; font-weight: 600; color: #8b5a3c; margin-bottom: 5px; }
+        .auth-input {
+            width: 100%; padding: 14px; border: 2px solid #ecdbcf; border-radius: 12px;
+            font-family: inherit; font-size: 14px; box-sizing: border-box; outline: none; transition: 0.3s;
+        }
+        .auth-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(176, 120, 72, 0.1); }
+
+        @media (max-width: 480px) {
+            .login-card { padding: 35px 25px; border-radius: 20px; }
+            .login-card h1 { font-size: 30px; }
+            .logo-icon { font-size: 45px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <div class="logo-icon">🍽️</div>
+        <h1>Kantin Sija</h1>
+        <p>Aplikasi Kasir & Manajemen Stok</p>
+
+        <div id="welcomeScreen">
+            <button id="showLoginBtn" class="btn-main">🔐 Login Masuk</button>
+        </div>
+
+        <div id="loginFormArea" class="auth-form">
+            <div class="input-group">
+                <label>Email Pengguna</label>
+                <input type="email" id="emailInput" class="auth-input" placeholder="Masukkan email...">
+            </div>
+            <div class="input-group">
+                <label>Kata Sandi</label>
+                <input type="password" id="passwordInput" class="auth-input" placeholder="Masukkan password...">
+            </div>
+            <button id="prosesLoginBtn" class="btn-main">🚀 Masuk Sekarang</button>
+            <button id="btnBack" class="btn-back">⬅️ Kembali</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { supabase } from './script.js';
+
+        // 1. Cek sesi saat halaman dimuat
+        async function checkSession() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                if (session.user.email === 'admin@kantin.com') {
+                    window.location.href = 'admin.html';
+                } else {
+                    window.location.href = 'user.html';
+                }
+            }
+        }
+        checkSession();
+
+        // 2. Animasi perpindahan antar layar form
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const loginFormArea = document.getElementById('loginFormArea');
+        const showLoginBtn = document.getElementById('showLoginBtn');
+        const btnBack = document.getElementById('btnBack');
+
+        showLoginBtn.addEventListener('click', () => {
+            welcomeScreen.style.display = 'none';
+            loginFormArea.style.display = 'block';
+            document.getElementById('emailInput').focus();
+        });
+
+        btnBack.addEventListener('click', () => {
+            loginFormArea.style.display = 'none';
+            welcomeScreen.style.display = 'block';
+        });
+
+        // 3. Proses Login Utama Supabase
+        const prosesLoginBtn = document.getElementById('prosesLoginBtn');
+        
+        prosesLoginBtn.addEventListener('click', async () => {
+            const email = document.getElementById('emailInput').value.trim();
+            const password = document.getElementById('passwordInput').value;
+
+            if (!email || !password) {
+                alert('⚠️ Email dan Password tidak boleh kosong!');
+                return;
+            }
+
+            // Ubah teks tombol jadi loading
+            prosesLoginBtn.innerText = 'Memproses...';
+            prosesLoginBtn.disabled = true;
+
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password,
+                });
+
+                if (error) throw error;
+
+                // Cek email untuk menentukan arah (Admin atau User biasa)
+                if (data.user.email === 'admin@kantin.com') {
+                    window.location.href = 'admin.html';
+                } else {
+                    window.location.href = 'user.html';
+                }
+
+            } catch (error) {
+                alert('❌ Login Gagal: ' + error.message);
+                prosesLoginBtn.innerText = '🚀 Masuk Sekarang';
+                prosesLoginBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

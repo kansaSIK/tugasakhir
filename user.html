@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kantin Sija - User Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    
+    <script>
+        const temaTersimpan = localStorage.getItem('kantin_tema') || 'vintage';
+        document.documentElement.setAttribute('data-theme', temaTersimpan);
+    </script>
+
+    <style>
+        /* === CSS UTAMA === */
+        :root { --primary: #b07848; --primary-hover: #9b6a47; --bg-color: #fcf9f5; --card-bg: #ffffff; --text-color: #4a3b32; --border-color: #ecdbcf; }
+        body { font-family: 'Poppins', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 0; position: relative; min-height: 100vh; }
+        .app-wrapper { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+        
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border-color); padding-bottom: 15px; margin-bottom: 20px; }
+        .header-title h1 { margin: 0; font-size: 28px; color: var(--primary); }
+        .header-title p { margin: 0; font-size: 14px; color: #8b5a3c; }
+        
+        .header-actions { display: flex; gap: 10px; align-items: center; }
+        
+        .logout-btn { background: var(--primary); color: white; border: none; padding: 10px 24px; border-radius: 20px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .logout-btn:hover { background: var(--primary-hover); transform: translateY(-2px); }
+        .logout-btn:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+
+        .tab-nav { display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; }
+        .tab-btn { background: transparent; color: #a08c7e; border: none; font-size: 16px; font-weight: 600; padding: 10px 20px; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+        .tab-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 10px rgba(176, 120, 72, 0.3); }
+
+        .two-columns { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; }
+        .card { background: var(--card-bg); padding: 25px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid var(--border-color); }
+        .card h2 { font-size: 18px; color: var(--primary); margin-top: 0; margin-bottom: 20px; }
+
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; color: #666; }
+        .form-control { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-family: inherit; font-size: 14px; box-sizing: border-box; outline: none; }
+        .form-control[readonly] { background-color: #f9f5f0; }
+        
+        .barcode-input { border: 2px solid var(--primary); background: #fffcf9; font-family: monospace; font-size: 15px; font-weight:bold; letter-spacing: 2px;}
+        .barcode-input:focus { box-shadow: 0 0 8px rgba(176, 120, 72, 0.3); }
+
+        .btn-tambah { background: var(--primary); color: white; border: none; width: 100%; padding: 14px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 15px; margin-top: 10px;}
+        
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        thead th { background: #fdf5f0; color: #8b5a3c; font-weight: 600; text-align: left; padding: 12px; border-bottom: 2px solid var(--border-color); }
+        tbody td { padding: 12px; border-bottom: 1px solid #f0e0d4; font-size: 14px; vertical-align: middle; }
+        .btn-hapus { background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        .btn-edit { background: #ffc107; color: #333; border: none; padding: 6px 10px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-right: 5px; }
+
+        .summary-area { background: #fdf5f0; padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--border-color); display: none; }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; }
+        .summary-total { display: flex; justify-content: space-between; font-weight: bold; font-size: 18px; margin-top: 10px; padding-top: 10px; border-top: 2px solid var(--border-color); }
+
+        .payment-method { display: flex; gap: 15px; align-items: center; margin-bottom: 20px; font-size: 14px; flex-wrap: wrap; }
+        .payment-method label { cursor: pointer; display: flex; align-items: center; gap: 5px; background: #fdf5f0; padding: 8px 12px; border-radius: 20px; border: 1px solid var(--border-color); transition: 0.2s; }
+        .payment-method label:hover { background: #f4eadc; }
+        
+        .btn-bayar { background: var(--primary); color: white; border: none; width: 100%; padding: 15px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 16px; margin-top: 10px; }
+
+        .panel { display: none; }
+        .panel.active-panel { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* MODAL */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999999 !important; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;}
+        .modal-card { background: white; padding: 30px; border-radius: 16px; width: 100%; max-width: 400px; text-align: center; max-height: 90vh; overflow-y: auto; box-sizing: border-box; }
+        
+        .struk-layout { display: flex; justify-content: center; width: 100%; }
+        .struk-container { background: white; font-family: 'Courier New', Courier, monospace; font-size: 12px; color: #222; padding: 30px; width: 100%; max-width: 320px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); text-align: left; box-sizing: border-box; }
+        .dashed-line { border-top: 1.5px dashed #444; margin: 12px 0; }
+        
+        .btn-action-struk { background: #c27e5a; color: white; padding: 10px 20px; border-radius: 30px; border: none; font-weight: bold; cursor: pointer; transition: 0.2s; font-family: 'Poppins', sans-serif; font-size: 14px;}
+        .btn-action-struk:hover { background: #b07848; transform: translateY(-2px); }
+
+        @media print { body * { visibility: hidden; } #strukContent, #strukContent * { visibility: visible; } #strukContent { position: absolute; left: 0; top: 0; margin: 0; box-shadow: none; width: 100%; } }
+
+        /* TEMA TERANG (LIGHT) & GELAP (DARK) */
+        [data-theme="light"] { --primary: #2563eb; --primary-hover: #1d4ed8; --bg-color: #f1f5f9; --card-bg: #ffffff; --text-color: #1e293b; --border-color: #e2e8f0; }
+        [data-theme="dark"] { --primary: #bb86fc; --primary-hover: #9965f4; --bg-color: #121212; --card-bg: #1e1e1e; --text-color: #e0e0e0; --border-color: #333333; }
+        [data-theme="dark"] table thead th { background: #2d2d2d; color: #bb86fc; border-bottom: 2px solid #444; }
+        [data-theme="dark"] input, [data-theme="dark"] select { background: #2d2d2d; color: #e0e0e0; border: 1px solid #444; }
+        [data-theme="dark"] .summary-area, [data-theme="dark"] .struk-qris-panel { background: #2d2d2d; border-color: #444; }
+        [data-theme="dark"] .rumus-box { background: #2d2810; border-left-color: #ffc107; color: #e0e0e0; }
+        [data-theme="dark"] .modal-card, [data-theme="dark"] .modal-content { background: #1e1e1e; color: #e0e0e0; }
+        
+        .theme-selector { padding: 8px 15px; border-radius: 20px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-color); font-weight: 600; cursor: pointer; outline: none; font-family: 'Poppins', sans-serif; transition: 0.3s; }
+
+        /* ==========================================
+           TAMPILAN MOBILE (HP)
+        ========================================== */
+        .mobile-nav { display: none; }
+
+        @media (max-width: 768px) {
+            body { padding-bottom: 90px !important; } 
+            .app-wrapper { padding: 10px; margin: 0; }
+            .header { flex-direction: column; gap: 12px; text-align: center; padding-bottom: 10px; margin-bottom: 15px; }
+            .header-title h1 { font-size: 24px; margin: 0; white-space: nowrap; }
+            .header-actions { justify-content: space-between; width: 100%; gap: 10px; }
+            .theme-selector, .logout-btn { padding: 8px 5px; font-size: 13px; text-align: center; width: 48%; margin: 0; border-radius: 8px; }
+            .two-columns { grid-template-columns: 1fr; gap: 15px; }
+            .card { padding: 15px; border-radius: 12px; }
+            .tab-nav { display: none !important; }
+
+            .mobile-nav {
+                display: flex !important; justify-content: space-around; align-items: center;
+                position: fixed !important; bottom: 0 !important; left: 0 !important; right: 0 !important;
+                width: 100% !important; background: var(--card-bg); border-top: 1px solid var(--border-color);
+                box-shadow: 0 -5px 15px rgba(0,0,0,0.1); z-index: 999999 !important;
+                padding: 10px 0; padding-bottom: calc(10px + env(safe-area-inset-bottom));
+            }
+
+            .mobile-btn { background: transparent; border: none; color: #a08c7e; font-family: 'Poppins', sans-serif; font-size: 11px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; flex: 1; outline: none; }
+            .mobile-btn span { font-size: 22px; transition: transform 0.3s; }
+            .mobile-btn.active { color: var(--primary); }
+            .mobile-btn.active span { transform: translateY(-3px) scale(1.1); filter: drop-shadow(0 3px 5px rgba(176,120,72,0.4)); }
+            .form-stok-inline { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+<div class="app-wrapper">
+    <div class="header">
+        <div class="header-title">
+            <h1>🍽️ Kantin Sija</h1>
+            <p>⸻ User Panel ⸻</p>
+        </div>
+        <div class="header-actions">
+            <select id="pilihTema" class="theme-selector">
+                <option value="vintage">🎨 Vintage</option>
+                <option value="light">☀️ Light</option>
+                <option value="dark">🌙 Dark</option>
+            </select>
+            <button id="logoutBtn" class="logout-btn">🚪 Logout</button>
+        </div>
+    </div>
+
+    <div class="tab-nav">
+        <button class="tab-btn active" data-tab="kasir">🧾 Kasir</button>
+        <button class="tab-btn" data-tab="stok">📦 Info Stok</button>
+        <button class="tab-btn" data-tab="barcode">🏷️ Barcode Produk</button>
+    </div>
+
+    <div id="kasirPanel" class="panel active-panel">
+        <div class="two-columns">
+            <div class="card">
+                <h2>📝 Entry Barang</h2>
+                <div class="form-group"><label>ID / Barcode Produk 🔍</label><input type="text" id="barcodeBarang" class="form-control barcode-input" placeholder="Ketik atau Scan Barcode..."></div>
+                <div class="form-group"><label>Pilih Barang Manual</label><select id="pilihBarang" class="form-control"><option value="">Memuat data...</option></select></div>
+                <div class="form-group"><label>Harga Satuan (Rp)</label><input type="text" id="hargaBarang" class="form-control" readonly placeholder="Otomatis terisi"></div>
+                <div class="form-group"><label>Jumlah</label><input type="number" id="jumlahBarang" class="form-control" min="1" step="1" value="1"></div>
+                <button id="btnTambahKasir" class="btn-tambah">➕ Tambah ke Daftar</button>
+            </div>
+
+            <div class="card">
+                <h2>📋 Daftar Belanja</h2>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead><tr><th>No</th><th>Barang</th><th>Harga</th><th>Jml</th><th>Subtotal</th><th>Aksi</th></tr></thead>
+                        <tbody id="dataKasir"><tr><td colspan="6" style="text-align:center; padding:30px; color:#999;">✨ Belum ada barang ✨</td></tr></tbody>
+                    </table>
+                </div>
+
+                <div id="summaryArea" class="summary-area">
+                    <div class="summary-row"><span>Subtotal:</span> <span id="txtSubtotal">Rp 0</span></div>
+                    <div class="summary-row"><span>PPN (11%):</span> <span id="txtPpn">Rp 0</span></div>
+                    <div class="summary-total"><span>Total Akhir:</span> <span id="txtTotalAkhir">Rp 0</span></div>
+                </div>
+                
+                <div class="payment-method">
+                    <strong style="width: 100%; display: block; margin-bottom: 8px;">Metode Bayar :</strong>
+                    <label><input type="radio" name="metode" value="Cash" checked> 💵 Cash</label>
+                    <label><input type="radio" name="metode" value="QRIS"> 📱 QRIS</label>
+                    <label><input type="radio" name="metode" value="Transfer"> 💳 Transfer</label>
+                    <label><input type="radio" name="metode" value="Debit"> 💳 Debit</label>
+                </div>
+                
+                <div class="form-group" id="qrisOption" style="display:none; background:#f9f5f0; padding:20px; border-radius:12px; border: 1px solid var(--border-color); text-align:center;">
+                    <label style="color:var(--primary); margin-bottom: 15px; font-size: 14px; display:block;">📱 Scan QRIS Berikut:</label>
+                    
+                    <div style="background: white; display: inline-block; padding: 15px; border-radius: 12px; border: 2px solid var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg" alt="QRIS" style="width: 160px; height: 160px; object-fit: contain;">
+                    </div>
+                    
+                    <p style="font-size: 15px; color: #4a3b32; font-weight: 700; margin: 15px 0 5px;">Kantin Sija</p>
+                    <p style="font-size: 12px; color: #888; margin: 0;">NMID: ID1029384756</p>
+                </div>
+
+                <div class="form-group" id="bankOption" style="display:none; background:#f9f5f0; padding:15px; border-radius:12px; border: 1px solid var(--border-color);">
+                    <label style="color:var(--primary); margin-bottom: 10px; font-size: 14px; text-align:center; display:block;">💳 Informasi Rekening Transfer:</label>
+                    
+                    <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 15px; font-size: 13px;">
+                        <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed #ccc; padding-bottom: 8px; margin-bottom: 8px;">
+                            <strong>BRI</strong> <span style="font-family: monospace; font-size: 14px; color:#b07848; font-weight:bold;">0123-456-789</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed #ccc; padding-bottom: 8px; margin-bottom: 8px;">
+                            <strong>BNI</strong> <span style="font-family: monospace; font-size: 14px; color:#b07848; font-weight:bold;">0987-654-321</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed #ccc; padding-bottom: 8px; margin-bottom: 8px;">
+                            <strong>MANDIRI</strong> <span style="font-family: monospace; font-size: 14px; color:#b07848; font-weight:bold;">1122-3344-5566</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed #ccc; padding-bottom: 8px; margin-bottom: 8px;">
+                            <strong>BTN</strong> <span style="font-family: monospace; font-size: 14px; color:#b07848; font-weight:bold;">9988-7766-5544</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <strong>BSI</strong> <span style="font-family: monospace; font-size: 14px; color:#b07848; font-weight:bold;">1020-3040-5060</span>
+                        </div>
+                        <div style="text-align: center; margin-top: 12px; font-size: 11px; color: #888; background:#fcf9f5; padding:5px; border-radius:5px;">a.n. Kantin Sija</div>
+                    </div>
+                    
+                    <label style="color:#666; margin-bottom: 5px; font-size: 12px;">Konfirmasi Bank yang dipakai pelanggan:</label>
+                    <select id="bankTransfer" class="form-control">
+                        <option value="BRI">BRI</option>
+                        <option value="BNI">BNI</option>
+                        <option value="MANDIRI">MANDIRI</option>
+                        <option value="BTN">BTN</option>
+                        <option value="BSI">BSI</option>
+                    </select>
+                </div>
+                
+                <button class="btn-bayar" id="btnLanjut">🔒 Lanjut Pembayaran</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="stokPanel" class="panel">
+        <div class="card">
+            <h2>📦 Ketersediaan Stok</h2>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead><tr><th>Barcode</th><th>Nama Barang</th><th>Harga</th><th>Stok Sisa</th></tr></thead>
+                    <tbody id="tabelStokUser"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="barcodePanel" class="panel">
+        <div class="card">
+            <h2>🏷️ Daftar Barcode Produk Kantin Sija</h2>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead><tr><th>No</th><th>Nama Barang</th><th>ID Barcode</th><th style="text-align:center;">Gambar Kode Batang</th></tr></thead>
+                    <tbody id="tabelBarcodeUser"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mobile-nav">
+    <button class="mobile-btn active" data-tab="kasir"><span>🧾</span> Kasir</button>
+    <button class="mobile-btn" data-tab="stok"><span>📦</span> Info Stok</button>
+    <button class="mobile-btn" data-tab="barcode"><span>🏷️</span> Barcode</button>
+</div>
+
+<div id="modalUang" class="modal">
+    <div class="modal-card">
+        <h3 style="color: var(--primary);">💵 Konfirmasi Uang</h3>
+        <p style="font-size: 15px; margin-bottom: 20px;">Tagihan: <strong id="uangTotalBelanja" style="font-size:18px;">Rp 0</strong></p>
+        <div class="form-group"><input type="number" id="uangDiterima" class="form-control" placeholder="Masukkan jumlah uang..." style="text-align: center; font-size: 18px; font-weight: bold;"></div>
+        <div style="display:flex; gap:10px; margin-top:20px;">
+            <button id="btnBatalUang" style="flex:1; padding:12px; border-radius:8px; border:none; cursor:pointer; background:#e7cfbe; color:#7b543b; font-weight:bold;">Batal</button>
+            <button id="btnProsesUang" style="flex:1; padding:12px; border-radius:8px; border:none; cursor:pointer; background:var(--primary); color:white; font-weight:bold;">Proses</button>
+        </div>
+    </div>
+</div>
+
+<div id="modalStruk" class="modal">
+    <div style="display:flex; flex-direction:column; align-items:center; gap:15px; max-height: 90vh; width: 100%;">
+        <div id="areaStrukLayout" style="overflow-y: auto; width: 100%; display: flex; justify-content: center; padding: 5px; box-sizing: border-box;"></div>
+        <div style="display:flex; gap:10px; background:white; padding:15px 25px; border-radius:30px; box-shadow:0 -5px 20px rgba(0,0,0,0.15); flex-shrink: 0; flex-wrap: wrap; justify-content: center;">
+            <button class="btn-action-struk" id="btnSelesaiTransaksi">Tutup & Simpan ✅</button>
+            <button class="btn-action-struk" id="btnCetakStruk" style="background:#555;">🖨️ Cetak</button>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import { supabase } from './script.js';
+
+    document.getElementById('logoutBtn').addEventListener('click', async (e) => {
+        e.preventDefault();
+        const btnLogout = document.getElementById('logoutBtn');
+        btnLogout.innerText = "Keluar..."; btnLogout.disabled = true;
+        try {
+            await supabase.auth.signOut();
+            Object.keys(localStorage).forEach(key => { if (key.includes('auth-token')) localStorage.removeItem(key); });
+        } catch(e) { console.error(e); }
+        window.location.replace('index.html');
+    });
+
+    const semuaTabBtn = document.querySelectorAll('.tab-btn, .mobile-btn');
+    semuaTabBtn.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetTab = btn.getAttribute('data-tab');
+            semuaTabBtn.forEach(b => b.classList.remove('active'));
+            document.querySelectorAll(`[data-tab="${targetTab}"]`).forEach(b => b.classList.add('active'));
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active-panel'));
+            document.getElementById(targetTab + 'Panel').classList.add('active-panel');
+        });
+    });
+
+    const dropdownTema = document.getElementById('pilihTema');
+    if (dropdownTema) {
+        dropdownTema.value = localStorage.getItem('kantin_tema') || 'vintage';
+        dropdownTema.addEventListener('change', (e) => {
+            const temaBaru = e.target.value;
+            document.documentElement.setAttribute('data-theme', temaBaru);
+            localStorage.setItem('kantin_tema', temaBaru);
+        });
+    }
+
+    // LOGIKA PERPINDAHAN METODE PEMBAYARAN
+    document.querySelectorAll('input[name="metode"]').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            const bayarMethod = e.target.value;
+            
+            // Sembunyikan Keduanya Dulu
+            document.getElementById('bankOption').style.display = 'none';
+            document.getElementById('qrisOption').style.display = 'none';
+            
+            // Tampilkan Sesuai Pilihan
+            if (bayarMethod === 'Transfer') {
+                document.getElementById('bankOption').style.display = 'block';
+            } else if (bayarMethod === 'QRIS') {
+                document.getElementById('qrisOption').style.display = 'block';
+            }
+        });
+    });
+
+    document.getElementById('btnBatalUang').addEventListener('click', () => { document.getElementById('modalUang').style.display = 'none'; });
+    document.getElementById('btnCetakStruk').addEventListener('click', () => { window.print(); });
+
+    let daftarBelanja = [];
+    let listStokData = [];
+    let pendingTransaction = null;
+    let editIndex = -1;
+    const formatRp = (angka) => new Intl.NumberFormat('id-ID').format(angka);
+
+    async function loadDataSistem() {
+        try {
+            const { data: { session }, error: errSession } = await supabase.auth.getSession();
+            if (errSession || !session) { window.location.replace('index.html'); return; }
+
+            const { data, error } = await supabase.from('produk').select('*').order('nama', { ascending: true });
+            if (error) throw error; 
+            listStokData = data || [];
+
+            document.getElementById('pilihBarang').innerHTML = '<option value="">-- Pilih Barang --</option>' + listStokData.filter(i => i.stok > 0).map(i => `<option value="${i.id}" data-nama="${i.nama}" data-harga="${i.harga}" data-stok="${i.stok}" data-barcode="${i.barcode || ''}">${i.nama} (Sisa: ${i.stok})</option>`).join('');
+            document.getElementById('tabelStokUser').innerHTML = listStokData.map(item => `<tr><td><strong style="color:var(--primary);">${item.barcode || '-'}</strong></td><td>${item.nama}</td><td>Rp ${formatRp(item.harga)}</td><td style="font-weight:bold; color: ${item.stok <= 5 ? '#dc3545' : '#28a745'};">${item.stok}</td></tr>`).join('');
+            document.getElementById('tabelBarcodeUser').innerHTML = listStokData.map((item, idx) => `<tr><td>${idx + 1}</td><td style="font-weight: 600;">${item.nama}</td><td style="font-family: monospace; font-size: 16px; font-weight: bold;">${item.barcode || '<span style="color:red; font-size:12px;">Belum Diatur</span>'}</td><td style="text-align:center;">${item.barcode ? `<svg class="barcode-render" style="max-height:45px;" data-barcode="${item.barcode}"></svg>` : '-'}</td></tr>`).join('');
+
+            setTimeout(() => {
+                document.querySelectorAll('.barcode-render').forEach(svg => {
+                    if (svg.getAttribute('data-barcode')) { JsBarcode(svg, svg.getAttribute('data-barcode'), { format: "CODE128", height: 40, displayValue: false, margin: 0, background: "transparent" }); }
+                });
+            }, 100);
+        } catch (err) { console.error(err); }
+    }
+    loadDataSistem();
+
+    document.getElementById('pilihBarang').addEventListener('change', (e) => {
+        const opt = e.target.options[e.target.selectedIndex];
+        document.getElementById('hargaBarang').value = opt.value ? formatRp(opt.dataset.harga) : '';
+        document.getElementById('barcodeBarang').value = opt.value ? (opt.dataset.barcode || '') : '';
+    });
+
+    document.getElementById('barcodeBarang').addEventListener('input', (e) => {
+        const barcodeDiketikan = e.target.value.trim();
+        if(!barcodeDiketikan) { document.getElementById('pilihBarang').selectedIndex = 0; document.getElementById('hargaBarang').value = ''; return; }
+        const produkKetemu = listStokData.find(p => p.barcode === barcodeDiketikan);
+        if (produkKetemu) { document.getElementById('pilihBarang').value = produkKetemu.id; document.getElementById('hargaBarang').value = formatRp(produkKetemu.harga); } 
+        else { document.getElementById('pilihBarang').selectedIndex = 0; document.getElementById('hargaBarang').value = 'Tidak ditemukan!'; }
+    });
+
+    window.renderKasir = function() {
+        const tbody = document.getElementById('dataKasir');
+        const summary = document.getElementById('summaryArea');
+        let total = 0;
+
+        if (daftarBelanja.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:30px; color:#999;">✨ Belum ada barang ✨</td></tr>';
+            summary.style.display = 'none'; return;
+        }
+
+        tbody.innerHTML = daftarBelanja.map((item, idx) => {
+            const subtotal = item.harga * item.jumlah; total += subtotal;
+            return `<tr><td>${idx + 1}</td><td>${item.nama}</td><td>Rp ${formatRp(item.harga)}</td><td>${item.jumlah}</td><td>Rp ${formatRp(subtotal)}</td><td><button class="btn-edit" onclick="editBarang(${idx})">✏️</button><button class="btn-hapus" onclick="hapusBarang(${idx})">X</button></td></tr>`;
+        }).join('');
+
+        const ppn = total * 0.11; const totalAkhir = total + ppn;
+        summary.style.display = 'block';
+        document.getElementById('txtSubtotal').innerText = `Rp ${formatRp(total)}`;
+        document.getElementById('txtPpn').innerText = `Rp ${formatRp(Math.round(ppn))}`;
+        document.getElementById('txtTotalAkhir').innerText = `Rp ${formatRp(Math.round(totalAkhir))}`;
+    };
+
+    window.editBarang = (idx) => {
+        const item = daftarBelanja[idx];
+        document.getElementById('pilihBarang').value = item.id;
+        document.getElementById('hargaBarang').value = formatRp(item.harga);
+        document.getElementById('jumlahBarang').value = item.jumlah;
+        document.getElementById('barcodeBarang').value = listStokData.find(p => p.id == item.id)?.barcode || '';
+        editIndex = idx;
+        const btn = document.getElementById('btnTambahKasir'); btn.innerHTML = '💾 Simpan Perubahan'; btn.style.background = '#28a745';
+    };
+
+    window.hapusBarang = (idx) => { daftarBelanja.splice(idx, 1); renderKasir(); if (editIndex === idx) resetFormEntry(); };
+
+    function resetFormEntry() {
+        editIndex = -1; document.getElementById('pilihBarang').selectedIndex = 0;
+        document.getElementById('hargaBarang').value = ''; document.getElementById('barcodeBarang').value = ''; 
+        document.getElementById('jumlahBarang').value = 1;
+        const btn = document.getElementById('btnTambahKasir'); btn.innerHTML = '➕ Tambah ke Daftar'; btn.style.background = 'var(--primary)';
+    }
+
+    document.getElementById('btnTambahKasir').addEventListener('click', () => {
+        const select = document.getElementById('pilihBarang'); const opt = select.options[select.selectedIndex];
+        if (!opt.value || opt.value.includes("ERROR")) return alert("Pilih barang dengan benar!");
+        
+        const id = opt.value, nama = opt.dataset.nama, harga = parseFloat(opt.dataset.harga), stokMaks = parseInt(opt.dataset.stok), barcode = opt.dataset.barcode || '', jumlah = parseInt(document.getElementById('jumlahBarang').value);
+
+        if (jumlah < 1) return alert("Jumlah minimal 1!");
+
+        if (editIndex > -1) {
+            if (jumlah > stokMaks) return alert(`Stok kurang! (Sisa: ${stokMaks})`);
+            daftarBelanja[editIndex] = { id, nama, harga, jumlah, barcode }; 
+            resetFormEntry();
+        } else {
+            const idx = daftarBelanja.findIndex(i => i.id === id);
+            if (idx !== -1) {
+                if (daftarBelanja[idx].jumlah + jumlah > stokMaks) return alert(`Stok kurang! (Sisa: ${stokMaks})`);
+                daftarBelanja[idx].jumlah += jumlah;
+            } else {
+                if (jumlah > stokMaks) return alert(`Stok kurang! (Sisa: ${stokMaks})`);
+                daftarBelanja.push({ id, nama, harga, jumlah, barcode }); 
+            }
+            resetFormEntry();
+        }
+        renderKasir(); document.getElementById('barcodeBarang').focus();
+    });
+
+    document.getElementById('btnLanjut').addEventListener('click', () => {
+        if (daftarBelanja.length === 0) return alert("Keranjang kosong!");
+        let total = 0; daftarBelanja.forEach(i => total += (i.harga * i.jumlah));
+        const totalAkhir = Math.round(total + (total * 0.11));
+        const metode = document.querySelector('input[name="metode"]:checked').value;
+        const bank = metode === 'Transfer' ? document.getElementById('bankTransfer').value : null;
+
+        pendingTransaction = { totalAkhir, totalSebelumPpn: total, metode, bank };
+        pendingTransaction.orderNumber = "ORD-" + Math.floor(Math.random() * 100000).toString().padStart(5, '0');
+
+        document.getElementById('uangTotalBelanja').innerText = `Rp ${formatRp(totalAkhir)}`;
+        
+        // AUTO-ISI UANG DITERIMA JIKA BUKAN CASH
+        if (metode === 'Cash') {
+            document.getElementById('uangDiterima').value = '';
+        } else {
+            // Karena QRIS/Transfer/Debit pasti bayarnya pas, langsung diisi otomatis total belanjanya
+            document.getElementById('uangDiterima').value = totalAkhir; 
+        }
+
+        document.getElementById('modalUang').style.display = 'flex';
+        document.getElementById('uangDiterima').focus();
+    });
+
+    document.getElementById('btnProsesUang').addEventListener('click', () => {
+        let uang = parseFloat(document.getElementById('uangDiterima').value);
+        if (isNaN(uang) || uang < pendingTransaction.totalAkhir) return alert("Uang yang dimasukkan kurang atau tidak valid!");
+        
+        pendingTransaction.uangDiterima = uang;
+        pendingTransaction.kembalian = uang - pendingTransaction.totalAkhir;
+        document.getElementById('modalUang').style.display = 'none';
+        tampilkanStruk();
+    });
+
+    function tampilkanStruk() {
+        const dateStr = new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }).toUpperCase();
+        const timeStr = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+        
+        let receiptHtml = `
+            <div id="strukContent" class="struk-container">
+                <div style="text-align:center; font-size:22px; font-weight:bold; margin-bottom: 5px; color:#523b2c;">🍽️ KANTIN SIJA</div>
+                <div style="text-align:center; margin-bottom: 15px; font-size:11px; font-weight:bold;">ORDER #${pendingTransaction.orderNumber}<br>${dateStr} • ${timeStr}</div>
+                <div class="dashed-line"></div>
+                <div style="display:flex; justify-content:space-between; font-weight:bold;"><span style="width:15%">QTY</span><span style="width:55%">ITEM</span><span style="width:30%; text-align:right;">AMT (RP)</span></div>
+                <div class="dashed-line"></div>
+        `;
+        daftarBelanja.forEach(i => { receiptHtml += `<div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span style="width:15%">${String(i.jumlah).padStart(2, '0')}</span><span style="width:55%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${i.nama}</span><span style="width:30%; text-align:right;">${formatRp(i.harga * i.jumlah)}</span></div>`; });
+        const ppn = pendingTransaction.totalAkhir - pendingTransaction.totalSebelumPpn;
+        receiptHtml += `
+                <div class="dashed-line"></div>
+                <div style="display:flex; justify-content:flex-end; gap:30px; margin-bottom:4px;"><span>Total Belanja</span><span>Rp ${formatRp(pendingTransaction.totalSebelumPpn)}</span></div>
+                <div style="display:flex; justify-content:flex-end; gap:30px; margin-bottom:4px;"><span>PPN 11%</span><span>Rp ${formatRp(ppn)}</span></div>
+                <div class="dashed-line"></div>
+                <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:14px;"><span>TOTAL AKHIR</span><span>Rp ${formatRp(pendingTransaction.totalAkhir)}</span></div>
+                <div class="dashed-line"></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>CASH TENDERED:</span><span>Rp ${formatRp(pendingTransaction.uangDiterima)}</span></div>
+                <div style="display:flex; justify-content:space-between; font-weight:bold;"><span>CHANGE:</span><span>Rp ${formatRp(pendingTransaction.kembalian)}</span></div>
+                <div class="dashed-line"></div><div style="text-align:center; margin-bottom:5px;">Metode: ${pendingTransaction.metode}</div><div style="text-align:center; margin-top:15px; font-size:10px;">THANK YOU FOR VISITING!<br>✨ KANTIN SIJA ✨</div>
+            </div> `;
+        document.getElementById('areaStrukLayout').innerHTML = `<div class="struk-layout">${receiptHtml}</div>`;
+        document.getElementById('modalStruk').style.display = 'flex';
+    }
+
+    document.getElementById('btnSelesaiTransaksi').addEventListener('click', async () => {
+        const btn = document.getElementById('btnSelesaiTransaksi');
+        btn.innerText = "Menyimpan..."; btn.disabled = true;
+
+        try {
+            const { error: errTrans } = await supabase.from('transactions').insert([{
+                order_number: pendingTransaction.orderNumber, total_akhir: pendingTransaction.totalAkhir,
+                metode: pendingTransaction.metode, bank: pendingTransaction.bank,
+                uang_diterima: pendingTransaction.uangDiterima, kembalian: pendingTransaction.kembalian, items: daftarBelanja
+            }]);
+            if (errTrans) throw new Error(errTrans.message);
+
+            for (let item of daftarBelanja) {
+                const produkAsli = listStokData.find(p => p.id == item.id);
+                if (produkAsli) { await supabase.from('produk').update({ stok: produkAsli.stok - item.jumlah }).eq('id', item.id); }
+            }
+
+            alert("✅ Transaksi Sukses Disimpan!");
+            daftarBelanja = []; resetFormEntry(); renderKasir(); await loadDataSistem();
+            document.getElementById('modalStruk').style.display = 'none';
+        } catch (error) { alert("🚨 ERROR:\n" + error.message); } finally { btn.innerText = "Tutup & Simpan ✅"; btn.disabled = false; }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #f9f2ec; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #3e2a21; padding: 0; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; }
+.app-wrapper { width: 100%; max-width: 100%; margin: 0; background: #f9f2ec; }
+
+/* HEADER YANG SUDAH DIRAPIKAN */
+.title-container { 
+    background: #ffffff; box-shadow: 0 5px 20px rgba(100, 60, 30, 0.05); 
+    padding: 20px 40px; margin-bottom: 20px; border-bottom: 1px solid #f0dfd1; 
+    width: 100%; display: flex; justify-content: space-between; align-items: center; 
+    flex-direction: row;
+}
+.title-left { text-align: left; }
+.title-left h1 { font-size: 32px; font-weight: 600; background: linear-gradient(135deg, #b07848, #9b623b); background-clip: text; -webkit-background-clip: text; color: transparent; display: inline-block; }
+.title-left p { font-size: 14px; color: #c28a62; margin-top: 6px; }
+
+/* TOMBOL HEADER (ANTI-MELAR) */
+.login-header-btn { 
+    background: #b07848; color: white; padding: 10px 24px; border: none; 
+    border-radius: 40px; font-size: 15px; font-weight: 600; cursor: pointer; 
+    transition: 0.2s; width: auto !important; margin-top: 0 !important;
+}
+.login-header-btn:hover { background: #9b6a47; transform: translateY(-2px); }
+
+.content-wrapper { max-width: 1400px; margin: 0 auto; padding: 0 24px 40px 24px; }
+.tab-nav { display: flex; gap: 16px; margin-bottom: 28px; border-bottom: 2px solid #e6d7c2; padding-bottom: 8px; }
+.tab-btn { background: none; border: none; font-size: 18px; font-weight: 600; color: #b47d56; cursor: pointer; padding: 8px 24px; border-radius: 40px; transition: 0.2s; margin: 0; width: auto !important; }
+.tab-btn.active { background: #c7865b; color: white; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+.tab-btn:hover:not(.active) { background: #f0e0d4; color: #8b5a3c; }
+.panel { display: none; }
+.panel.active-panel { display: block; }
+.two-columns { display: flex; flex-wrap: wrap; gap: 28px; }
+.input-card, .output-card, .history-list { background: #ffffff; border-radius: 20px; box-shadow: 0 5px 20px rgba(100, 60, 30, 0.06); padding: 28px 26px; border: 1px solid #f0dfd1; }
+.input-card { flex: 1.2; min-width: 280px; }
+.output-card { flex: 2; min-width: 320px; }
+.input-card h2, .output-card h2 { font-size: 20px; font-weight: 600; color: #9b6a47; margin-bottom: 24px; padding-bottom: 10px; border-bottom: 1px solid #f0e0d4; }
+.form-group { margin-bottom: 20px; }
+label { display: block; font-size: 13px; font-weight: 500; color: #7e5a41; margin-bottom: 6px; }
+select, input { width: 100%; padding: 12px 14px; font-size: 14px; border: 1.5px solid #ecdbcf; border-radius: 14px; background-color: #fffefc; transition: 0.2s; outline: none; }
+select:focus, input:focus { border-color: #dbb087; box-shadow: 0 0 0 3px rgba(200, 135, 85, 0.1); }
+button { width: 100%; background-color: #c7865b; border: none; padding: 12px; border-radius: 40px; font-weight: 600; font-size: 15px; color: white; cursor: pointer; transition: 0.2s; margin-top: 8px; }
+button:hover { background-color: #b57248; transform: translateY(-1px); }
+
+/* TABEL & STOK PLUS MINUS */
+.table-container { overflow-x: auto; margin-bottom: 20px; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th { text-align: center; padding: 12px 8px; background-color: #faefe8; color: #7a543c; font-weight: 600; border-bottom: 1px solid #e9d6c8; }
+td { padding: 10px 6px; text-align: center; border-bottom: 1px solid #f0e1d4; color: #4d3424; vertical-align: middle; }
+.aksi-btn { background: none; border: none; font-size: 18px; cursor: pointer; margin: 0 4px; padding: 4px 8px; border-radius: 8px; transition: 0.1s; width: auto !important; }
+.aksi-btn.delete { color: #c27e5a; font-size: 14px; font-weight: bold; background: #fce8e0; }
+.aksi-btn.delete:hover { background: #f2d1c4; }
+
+.btn-min-plus { background: #f0e0d4; border: none; color: #b07848; font-weight: bold; font-size: 18px; width: 30px !important; height: 30px; border-radius: 50%; cursor: pointer; transition: 0.2s; display: inline-flex; justify-content: center; align-items: center; margin: 0 8px; padding: 0; }
+.btn-min-plus:hover { background: #dcbca3; transform: scale(1.1); }
+.stok-angka { display: inline-block; min-width: 30px; text-align: center; font-size: 16px; }
+
+/* SUMMARY & PAYMENT */
+.summary { background: #fffbf7; border-radius: 20px; padding: 20px; margin-top: 20px; border: 1px solid #f0dfd1; }
+.summary-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; color: #6e4d34; }
+.summary-row.total-final { font-size: 20px; font-weight: 800; color: #b16d42; border-top: 2px dashed #e9cfbc; padding-top: 12px; margin-top: 8px; }
+.payment-method { margin-top: 20px; display: flex; gap: 20px; justify-content: flex-start; align-items: center; flex-wrap: wrap; }
+.payment-method label { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 500; color: #7e5a41; }
+.payment-method input { width: auto; margin-right: 4px; }
+.bank-option { margin-top: 12px; display: none; }
+.bank-option.active { display: block; }
+.bank-option select { width: auto; padding: 8px 12px; margin-left: 10px; }
+.btn-lanjut { background-color: #9b6a47; margin-top: 20px; }
+
+/* HISTORY */
+.history-group { margin-bottom: 24px; border-left: 4px solid #c7865b; padding-left: 16px; }
+.history-date { font-size: 18px; font-weight: bold; color: #9b6a47; margin-bottom: 12px; display: flex; justify-content: space-between; flex-wrap: wrap; }
+.history-card { background: #fefaf5; border-radius: 16px; padding: 16px; margin-bottom: 12px; margin-left: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.03); }
+.history-header { display: flex; justify-content: space-between; flex-wrap: wrap; margin-bottom: 8px; font-weight: bold; color: #9b6a47; }
+.history-detail { font-size: 13px; color: #6e4d34; }
+.empty-history { text-align: center; padding: 40px; color: #b99274; }
+
+/* MODAL GLOBAL */
+.modal-struk, .modal-uang, .modal-login { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); z-index: 9999; justify-content: center; align-items: center; }
+.modal-content { background: #ffffff; width: 100%; max-width: 780px; border-radius: 0px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); animation: fadeInUp 0.2s ease; }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.receipt-full { padding: 24px; font-family: 'Courier New', monospace; }
+.btn-group-modal { text-align: center; padding: 12px 0 16px; background: #ffffff; border-top: 1px solid #e6d7c2; }
+.btn-group-modal button { width: auto !important; padding: 8px 18px; margin: 0 6px; font-family: monospace; font-size: 12px; }
+
+.modal-uang .modal-card { background: white; border-radius: 20px; padding: 24px; width: 90%; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+.modal-uang h3 { margin-bottom: 20px; color: #9b6a47; }
+
+.btn-primary {
+    background-color: #d2a679; /* Sesuaikan dengan warna coklat admin */
+    color: white;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-bayar {
+    background-color: #b07d4b;
+    color: white;
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    margin-top: 10px;
+    cursor: pointer;
+}
