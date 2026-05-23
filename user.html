@@ -167,6 +167,11 @@
 
                 <div id="summaryArea" class="summary-area">
                     <div class="summary-row"><span>Subtotal:</span> <span id="txtSubtotal">Rp 0</span></div>
+                    
+                    <div class="summary-row" id="rowDiskon" style="display:none; color: #28a745; font-weight: bold;">
+                        <span>Diskon Promo (10%):</span> <span id="txtDiskon">- Rp 0</span>
+                    </div>
+
                     <div class="summary-row"><span>PPN (11%):</span> <span id="txtPpn">Rp 0</span></div>
                     <div class="summary-total"><span>Total Akhir:</span> <span id="txtTotalAkhir">Rp 0</span></div>
                 </div>
@@ -315,16 +320,11 @@
         });
     }
 
-    // LOGIKA PERPINDAHAN METODE PEMBAYARAN
     document.querySelectorAll('input[name="metode"]').forEach(radio => {
         radio.addEventListener('change', (e) => {
             const bayarMethod = e.target.value;
-            
-            // Sembunyikan Keduanya Dulu
             document.getElementById('bankOption').style.display = 'none';
             document.getElementById('qrisOption').style.display = 'none';
-            
-            // Tampilkan Sesuai Pilihan
             if (bayarMethod === 'Transfer') {
                 document.getElementById('bankOption').style.display = 'block';
             } else if (bayarMethod === 'QRIS') {
@@ -378,6 +378,7 @@
         else { document.getElementById('pilihBarang').selectedIndex = 0; document.getElementById('hargaBarang').value = 'Tidak ditemukan!'; }
     });
 
+    // ✨ LOGIKA DISKON DI RENDER KASIR ✨
     window.renderKasir = function() {
         const tbody = document.getElementById('dataKasir');
         const summary = document.getElementById('summaryArea');
@@ -393,9 +394,23 @@
             return `<tr><td>${idx + 1}</td><td>${item.nama}</td><td>Rp ${formatRp(item.harga)}</td><td>${item.jumlah}</td><td>Rp ${formatRp(subtotal)}</td><td><button class="btn-edit" onclick="editBarang(${idx})">✏️</button><button class="btn-hapus" onclick="hapusBarang(${idx})">X</button></td></tr>`;
         }).join('');
 
-        const ppn = total * 0.11; const totalAkhir = total + ppn;
+        // Cek Diskon (10% jika >= 100.000)
+        let diskon = 0;
+        if (total >= 100000) {
+            diskon = total * 0.10;
+            document.getElementById('rowDiskon').style.display = 'flex';
+        } else {
+            document.getElementById('rowDiskon').style.display = 'none';
+        }
+
+        // Hitung Total setelah Diskon dan PPN
+        const totalSetelahDiskon = total - diskon;
+        const ppn = totalSetelahDiskon * 0.11; 
+        const totalAkhir = totalSetelahDiskon + ppn;
+
         summary.style.display = 'block';
         document.getElementById('txtSubtotal').innerText = `Rp ${formatRp(total)}`;
+        document.getElementById('txtDiskon').innerText = `- Rp ${formatRp(Math.round(diskon))}`;
         document.getElementById('txtPpn').innerText = `Rp ${formatRp(Math.round(ppn))}`;
         document.getElementById('txtTotalAkhir').innerText = `Rp ${formatRp(Math.round(totalAkhir))}`;
     };
@@ -445,23 +460,32 @@
         renderKasir(); document.getElementById('barcodeBarang').focus();
     });
 
+    // ✨ LOGIKA DISKON SAAT TOMBOL LANJUT DITEKAN ✨
     document.getElementById('btnLanjut').addEventListener('click', () => {
         if (daftarBelanja.length === 0) return alert("Keranjang kosong!");
-        let total = 0; daftarBelanja.forEach(i => total += (i.harga * i.jumlah));
-        const totalAkhir = Math.round(total + (total * 0.11));
+        
+        let total = 0; 
+        daftarBelanja.forEach(i => total += (i.harga * i.jumlah));
+        
+        let diskon = 0;
+        if (total >= 100000) diskon = total * 0.10;
+        
+        const totalSetelahDiskon = total - diskon;
+        const ppn = totalSetelahDiskon * 0.11;
+        const totalAkhir = Math.round(totalSetelahDiskon + ppn);
+
         const metode = document.querySelector('input[name="metode"]:checked').value;
         const bank = metode === 'Transfer' ? document.getElementById('bankTransfer').value : null;
 
-        pendingTransaction = { totalAkhir, totalSebelumPpn: total, metode, bank };
+        // Simpan nilai diskon & ppn di transaksi untuk dicetak di struk
+        pendingTransaction = { totalAkhir, totalSebelumPpn: total, diskon, ppn, metode, bank };
         pendingTransaction.orderNumber = "ORD-" + Math.floor(Math.random() * 100000).toString().padStart(5, '0');
 
         document.getElementById('uangTotalBelanja').innerText = `Rp ${formatRp(totalAkhir)}`;
         
-        // AUTO-ISI UANG DITERIMA JIKA BUKAN CASH
         if (metode === 'Cash') {
             document.getElementById('uangDiterima').value = '';
         } else {
-            // Karena QRIS/Transfer/Debit pasti bayarnya pas, langsung diisi otomatis total belanjanya
             document.getElementById('uangDiterima').value = totalAkhir; 
         }
 
@@ -479,6 +503,7 @@
         tampilkanStruk();
     });
 
+    // ✨ TAMPILAN STRUK DENGAN DISKON ✨
     function tampilkanStruk() {
         const dateStr = new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }).toUpperCase();
         const timeStr = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
@@ -491,12 +516,19 @@
                 <div style="display:flex; justify-content:space-between; font-weight:bold;"><span style="width:15%">QTY</span><span style="width:55%">ITEM</span><span style="width:30%; text-align:right;">AMT (RP)</span></div>
                 <div class="dashed-line"></div>
         `;
+        
         daftarBelanja.forEach(i => { receiptHtml += `<div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span style="width:15%">${String(i.jumlah).padStart(2, '0')}</span><span style="width:55%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${i.nama}</span><span style="width:30%; text-align:right;">${formatRp(i.harga * i.jumlah)}</span></div>`; });
-        const ppn = pendingTransaction.totalAkhir - pendingTransaction.totalSebelumPpn;
+        
+        let diskonHtml = '';
+        if (pendingTransaction.diskon > 0) {
+            diskonHtml = `<div style="display:flex; justify-content:flex-end; gap:30px; margin-bottom:4px; color: #28a745;"><span>Diskon (10%)</span><span>- Rp ${formatRp(Math.round(pendingTransaction.diskon))}</span></div>`;
+        }
+
         receiptHtml += `
                 <div class="dashed-line"></div>
-                <div style="display:flex; justify-content:flex-end; gap:30px; margin-bottom:4px;"><span>Total Belanja</span><span>Rp ${formatRp(pendingTransaction.totalSebelumPpn)}</span></div>
-                <div style="display:flex; justify-content:flex-end; gap:30px; margin-bottom:4px;"><span>PPN 11%</span><span>Rp ${formatRp(ppn)}</span></div>
+                <div style="display:flex; justify-content:flex-end; gap:30px; margin-bottom:4px;"><span>Subtotal</span><span>Rp ${formatRp(pendingTransaction.totalSebelumPpn)}</span></div>
+                ${diskonHtml}
+                <div style="display:flex; justify-content:flex-end; gap:30px; margin-bottom:4px;"><span>PPN 11%</span><span>Rp ${formatRp(Math.round(pendingTransaction.ppn))}</span></div>
                 <div class="dashed-line"></div>
                 <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:14px;"><span>TOTAL AKHIR</span><span>Rp ${formatRp(pendingTransaction.totalAkhir)}</span></div>
                 <div class="dashed-line"></div>
@@ -504,6 +536,7 @@
                 <div style="display:flex; justify-content:space-between; font-weight:bold;"><span>CHANGE:</span><span>Rp ${formatRp(pendingTransaction.kembalian)}</span></div>
                 <div class="dashed-line"></div><div style="text-align:center; margin-bottom:5px;">Metode: ${pendingTransaction.metode}</div><div style="text-align:center; margin-top:15px; font-size:10px;">THANK YOU FOR VISITING!<br>✨ KANTIN SIJA ✨</div>
             </div> `;
+            
         document.getElementById('areaStrukLayout').innerHTML = `<div class="struk-layout">${receiptHtml}</div>`;
         document.getElementById('modalStruk').style.display = 'flex';
     }
@@ -514,9 +547,13 @@
 
         try {
             const { error: errTrans } = await supabase.from('transactions').insert([{
-                order_number: pendingTransaction.orderNumber, total_akhir: pendingTransaction.totalAkhir,
-                metode: pendingTransaction.metode, bank: pendingTransaction.bank,
-                uang_diterima: pendingTransaction.uangDiterima, kembalian: pendingTransaction.kembalian, items: daftarBelanja
+                order_number: pendingTransaction.orderNumber, 
+                total_akhir: pendingTransaction.totalAkhir,
+                metode: pendingTransaction.metode, 
+                bank: pendingTransaction.bank,
+                uang_diterima: pendingTransaction.uangDiterima, 
+                kembalian: pendingTransaction.kembalian, 
+                items: daftarBelanja
             }]);
             if (errTrans) throw new Error(errTrans.message);
 
