@@ -204,33 +204,275 @@
         ========================================== */
         .mobile-nav { display: none; }
 
-        @media (max-width: 768px) {
-            body { padding-bottom: 90px !important; } 
-            .app-wrapper { padding: 10px; margin: 0; }
-            .header { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 12px; padding-bottom: 15px; margin-bottom: 15px; width: 100%; }
-            .header-title { display: flex; flex-direction: column; align-items: center; width: 100%; }
-            .header-title h1 { font-size: 26px; margin: 0; width: 100%; text-align: center; }
-            .header-title p { width: 100%; text-align: center; }
-            .header-actions { justify-content: center; width: 100%; gap: 10px; display: flex; }
-            .theme-selector, .logout-btn { padding: 8px 5px; font-size: 13px; text-align: center; width: 48%; margin: 0; border-radius: 8px; }
-            .two-columns { grid-template-columns: 1fr; gap: 15px; }
-            .card { padding: 15px; border-radius: 12px; }
-            .tab-nav { display: none !important; }
+     /* ==========================================
+           TAMPILAN MOBILE (HP) FIX HEADER CENTER & GRID
+           ========================================== */
+       /* ==========================================
+   RESPONSIVE — TABLET (769px – 1024px)
+   Layar tablet: tab nav tetap tampil tapi
+   lebih kompak, layout tetap dua kolom.
+========================================== */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .app-wrapper {
+        padding: 15px;
+        margin: 10px auto;
+    }
 
-            .mobile-nav {
-                display: flex !important; justify-content: space-around; align-items: center;
-                position: fixed !important; bottom: 0 !important; left: 0 !important; right: 0 !important;
-                width: 100% !important; background: var(--card-bg); border-top: 1px solid var(--border-color);
-                box-shadow: 0 -5px 15px rgba(0,0,0,0.1); z-index: 999999 !important;
-                padding: 10px 0; padding-bottom: calc(10px + env(safe-area-inset-bottom));
-            }
+    /* Header sedikit lebih rapat */
+    .header {
+        padding-bottom: 12px;
+        margin-bottom: 16px;
+    }
 
-            .mobile-btn { background: transparent; border: none; color: #94a3b8; font-family: 'Poppins', sans-serif; font-size: 11px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; flex: 1; outline: none; }
-            .mobile-btn span { font-size: 22px; transition: transform 0.3s; }
-            .mobile-btn.active { color: var(--primary); }
-            .mobile-btn.active span { transform: translateY(-3px) scale(1.1); filter: drop-shadow(0 3px 5px rgba(59,130,246,0.4)); }
-            .form-stok-inline { flex-direction: column; }
-        }
+    .header-title h1 {
+        font-size: 24px;
+    }
+
+    /* Tab nav lebih kecil di tablet */
+    .tab-nav {
+        gap: 8px;
+        margin-bottom: 18px;
+        flex-wrap: wrap;
+    }
+
+    .tab-btn {
+        font-size: 13px;
+        padding: 8px 14px;
+    }
+
+    /* Grid dua kolom tetap, tapi rasio lebih seimbang */
+    .two-columns {
+        grid-template-columns: 1fr 1.6fr;
+        gap: 15px;
+    }
+
+    /* Card padding lebih kecil */
+    .card {
+        padding: 18px;
+    }
+
+    /* Mobile nav DISEMBUNYIKAN di tablet */
+    .mobile-nav {
+        display: none !important;
+    }
+}
+
+
+/* ==========================================
+   RESPONSIVE — MOBILE (≤ 768px)
+   - Header rata tengah
+   - Tab nav desktop DISEMBUNYIKAN
+   - Mobile nav bawah DITAMPILKAN
+   - Layout satu kolom penuh
+========================================== */
+@media (max-width: 768px) {
+
+    /* === WRAPPER === */
+    .app-wrapper {
+        padding: 15px 12px;
+        margin: 0;
+        /* Beri ruang di bawah untuk mobile nav */
+        padding-bottom: 85px;
+    }
+
+    /* === HEADER: Rata tengah penuh === */
+    .header {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        gap: 12px;
+        padding-bottom: 16px;
+        margin-bottom: 16px;
+        border-bottom: 2px solid var(--border-color);
+    }
+
+    .header-title {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .header-title h1 {
+        font-size: 26px;
+        text-align: center;
+        margin: 0;
+    }
+
+    .header-title p {
+        text-align: center;
+        margin: 4px 0 0;
+        font-size: 13px;
+    }
+
+    /* === HEADER ACTIONS: Tema + Logout sejajar === */
+    .header-actions {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        gap: 10px;
+    }
+
+    /* Dropdown tema dan tombol logout 50:50 */
+    .theme-selector,
+    .logout-btn {
+        width: 48%;
+        text-align: center;
+        padding: 10px 8px;
+        font-size: 13px;
+        border-radius: 12px;
+        margin: 0;
+        box-sizing: border-box;
+    }
+
+    /* === TAB NAV DESKTOP: SEMBUNYIKAN di mobile === */
+    /* Navigasi pakai mobile-nav di bawah layar */
+    .tab-nav {
+        display: none !important;
+    }
+
+    /* === LAYOUT: Satu kolom === */
+    .two-columns {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    /* === CARD === */
+    .card {
+        padding: 16px;
+        border-radius: 12px;
+    }
+
+    .card h2 {
+        font-size: 16px;
+        margin-bottom: 14px;
+    }
+
+    /* === FORM === */
+    .form-control {
+        padding: 10px;
+        font-size: 13px;
+    }
+
+    .barcode-input {
+        font-size: 14px;
+    }
+
+    .btn-tambah,
+    .btn-bayar {
+        padding: 13px;
+        font-size: 14px;
+    }
+
+    /* === TABLE === */
+    table {
+        font-size: 12px;
+    }
+
+    thead th {
+        padding: 10px 8px;
+    }
+
+    tbody td {
+        padding: 10px 8px;
+    }
+
+    .btn-hapus,
+    .btn-edit {
+        padding: 5px 8px;
+        font-size: 11px;
+    }
+
+    /* === SUMMARY === */
+    .summary-area {
+        padding: 14px;
+        border-radius: 10px;
+    }
+
+    .summary-row {
+        font-size: 13px;
+    }
+
+    .summary-total {
+        font-size: 15px;
+    }
+
+    /* === PAYMENT METHOD === */
+    .payment-method {
+        gap: 8px;
+    }
+
+    .payment-method label {
+        font-size: 13px;
+        padding: 7px 10px;
+    }
+
+    /* === RIWAYAT === */
+    .riwayat-card {
+        padding: 14px;
+    }
+
+    .riwayat-header {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .riwayat-total-row {
+        font-size: 14px;
+    }
+
+    /* === MODAL === */
+    .modal-card {
+        padding: 20px;
+    }
+
+    /* === MOBILE NAV: Tampilkan di mobile === */
+    .mobile-nav {
+        display: flex !important;
+        justify-content: space-around;
+        align-items: center;
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        background: var(--card-bg);
+        border-top: 1px solid var(--border-color);
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+        z-index: 999999 !important;
+        padding: 10px 0;
+        /* Safe area untuk iPhone notch */
+        padding-bottom: calc(10px + env(safe-area-inset-bottom));
+        transition: background-color 0.3s, border-color 0.3s;
+    }
+
+    .mobile-btn {
+        background: transparent;
+        border: none;
+        color: #94a3b8;
+        font-family: 'Poppins', sans-serif;
+        font-size: 10px;
+        font-weight: 600;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        cursor: pointer;
+        flex: 1;
+        transition: color 0.2s;
+        padding: 0;
+    }
+
+    .mobile-btn span {
+        font-size: 20px;
+        line-height: 1;
+    }
+
+    .mobile-btn.active {
+        color: var(--primary);
+    }
+}
     </style>
 </head>
 <body>
