@@ -27,7 +27,7 @@
         .header-title p { margin: 0; font-size: 14px; color: #8b5a3c; }
         
         .header-actions { display: flex; gap: 10px; align-items: center; }
-        
+        .theme-selector { padding: 8px 15px; border-radius: 20px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-color); font-weight: 600; cursor: pointer; transition: 0.3s; outline: none; }
         .logout-btn { background: var(--primary); color: white; border: none; padding: 10px 24px; border-radius: 20px; font-weight: 600; cursor: pointer; transition: 0.2s; }
         .logout-btn:hover { background: var(--primary-hover); transform: translateY(-2px); }
 
@@ -39,7 +39,7 @@
         .panel.active-panel { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        .card { background: var(--card-bg); padding: 25px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid var(--border-color); margin-bottom: 20px; transition: 0.3s; }
+        .card { background: var(--card-bg); padding: 25px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid var(--border-color); margin-bottom: 20px; transition: 0.3s; overflow: hidden; }
         .card h2 { font-size: 18px; color: var(--primary); margin-top: 0; margin-bottom: 20px; border-bottom: 1px dashed var(--border-color); padding-bottom: 10px;}
 
         .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
@@ -55,10 +55,10 @@
         .mini-stat-card { flex: 1; background: var(--bg-color); padding: 15px; border-radius: 12px; border: 1px solid var(--border-color); text-align: center; box-shadow: inset 0 2px 5px rgba(0,0,0,0.03); transition: 0.3s; }
         .mini-stat-card span { font-size: 13px; font-weight: 600; opacity: 0.7; display: block; margin-bottom: 5px; }
 
-        /* Style Pembatas Tanggal di Histori */
         .date-divider { background: #f0e0d4; color: #8b5a3c; padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: bold; margin: 20px 0 12px; display: inline-block; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        table { width: 100%; border-collapse: collapse; }
+        .table-responsive { width: 100%; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 500px; }
         thead th { background: #fdf5f0; color: #8b5a3c; font-weight: 600; text-align: left; padding: 12px; border-bottom: 2px solid var(--border-color); }
         tbody td, tfoot td { padding: 12px; border-bottom: 1px solid #f0e0d4; font-size: 14px; }
         
@@ -66,9 +66,8 @@
         .badge-gray { background: #6c757d; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
 
         .form-stok-inline { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-        .form-stok-inline input { flex: 1; min-width: 150px; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-family: inherit; outline: none; }
+        .form-stok-inline input { flex: 1; min-width: 140px; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-family: inherit; outline: none; }
         .form-stok-inline button { background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        
         .barcode-input { font-family: monospace; letter-spacing: 1px; font-weight: bold; color: #b07848; }
 
         /* MODAL */
@@ -79,6 +78,9 @@
         .form-group { margin-bottom: 15px; text-align: left; }
         .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; color: #666; }
         .form-control { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-family: inherit; font-size: 14px; box-sizing: border-box; outline: none; }
+
+        /* Navigasi Mobile (Disembunyikan di Desktop) */
+        .mobile-nav { display: none; }
 
         /* TEMA GELAP/TERANG */
         [data-theme="light"] { --primary: #2563eb; --primary-hover: #1d4ed8; --bg-color: #f1f5f9; --card-bg: #ffffff; --text-color: #1e293b; --border-color: #e2e8f0; }
@@ -98,24 +100,55 @@
         [data-theme="dark"] .mini-stat-card { box-shadow: inset 0 2px 5px rgba(0,0,0,0.3); background-color: #0f172a; }
         [data-theme="dark"] .date-divider { background: #334155; color: #ffffff; }
 
-        .theme-selector { padding: 8px 15px; border-radius: 20px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-color); font-weight: 600; cursor: pointer; outline: none; transition: 0.3s; }
-
+        /* =========================================
+           TAMPILAN MOBILE (HP) 
+           ========================================= */
         @media (max-width: 768px) {
-            body { padding-bottom: 90px !important; } 
-            .app-wrapper { padding: 10px; margin: 0; }
-            .header { flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 12px; padding-bottom: 15px; margin-bottom: 15px; width: 100%; }
-            .header-title { display: flex; flex-direction: column; align-items: center; width: 100%; }
-            .header-title h1 { font-size: 26px; margin: 0; text-align: center; width: 100%; }
-            .header-title p { text-align: center; width: 100%; }
-            .header-actions { justify-content: center; width: 100%; gap: 10px; display: flex; }
-            .two-columns, .dashboard-grid, .history-layout { grid-template-columns: 1fr; gap: 15px; }
-            .card { padding: 15px; border-radius: 12px; }
+            /* Beri jarak di bawah agar tidak tertutup menu navigasi */
+            body { padding-bottom: 85px !important; } 
+            .app-wrapper { padding: 15px; margin: 0; }
+            
+            /* Header Center (Rata Tengah) */
+            .header { flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 15px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); }
+            .header-title { width: 100%; display: flex; flex-direction: column; align-items: center; }
+            .header-title h1 { font-size: 28px; }
+            .header-actions { display: flex; justify-content: center; width: 100%; gap: 15px; }
+            .theme-selector, .logout-btn { width: 45%; padding: 10px; font-size: 14px; text-align: center; border-radius: 12px; }
+            
+            /* Sembunyikan Navigasi Atas */
             .tab-nav { display: none !important; }
-            .mobile-nav { display: flex !important; justify-content: space-around; align-items: center; position: fixed !important; bottom: 0 !important; left: 0 !important; right: 0 !important; width: 100% !important; background: var(--card-bg); border-top: 1px solid var(--border-color); box-shadow: 0 -5px 15px rgba(0,0,0,0.1); z-index: 999999 !important; padding: 10px 0; padding-bottom: calc(10px + env(safe-area-inset-bottom)); }
-            .mobile-btn { background: transparent; border: none; color: #94a3b8; font-family: 'Poppins', sans-serif; font-size: 11px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; flex: 1; transition: 0.3s; outline: none; }
-            .mobile-btn span { font-size: 22px; transition: transform 0.3s; }
+
+            /* Grid Menjadi 1 Kolom */
+            .dashboard-grid, .history-layout { grid-template-columns: 1fr; gap: 15px; }
+            .card { padding: 18px; border-radius: 12px; }
+
+            /* MUNCULKAN NAVIGASI BAWAH */
+            .mobile-nav {
+                display: flex !important; 
+                justify-content: space-around; 
+                align-items: center; 
+                position: fixed !important; 
+                bottom: 0 !important; 
+                left: 0 !important; 
+                right: 0 !important; 
+                width: 100% !important; 
+                background: var(--card-bg); 
+                border-top: 1px solid var(--border-color); 
+                box-shadow: 0 -4px 15px rgba(0,0,0,0.08); 
+                z-index: 999999 !important; 
+                padding: 12px 0; 
+                padding-bottom: calc(12px + env(safe-area-inset-bottom)); 
+            }
+            .mobile-btn { 
+                background: transparent; border: none; color: #94a3b8; 
+                font-family: 'Poppins', sans-serif; font-size: 12px; font-weight: 600; 
+                display: flex; flex-direction: column; align-items: center; gap: 5px; 
+                cursor: pointer; flex: 1; transition: 0.3s; outline: none; 
+            }
+            .mobile-btn span { font-size: 24px; transition: transform 0.3s; }
             .mobile-btn.active { color: var(--primary); }
-            .mobile-btn.active span { transform: translateY(-3px) scale(1.1); filter: drop-shadow(0 3px 5px rgba(59,130,246,0.4)); }
+            .mobile-btn.active span { transform: translateY(-4px) scale(1.1); filter: drop-shadow(0 3px 5px rgba(176,120,72,0.4)); }
+            
             .form-stok-inline { flex-direction: column; }
         }
   </style>
@@ -158,7 +191,6 @@
         <div class="dashboard-grid">
             <div class="card">
                 <h2>📈 Tren Penjualan Harian</h2>
-                
                 <div style="display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap;">
                     <div class="mini-stat-card">
                         <span>📦 Barang Terjual (Hari Ini)</span>
@@ -171,7 +203,6 @@
                         <div id="subDetailTransaksi" style="font-size: 11px; margin-top: 6px; font-weight: 600; opacity: 0.85;">Cash: 0 | Digital: 0</div>
                     </div>
                 </div>
-
                 <canvas id="lineChartOmset"></canvas>
             </div>
             <div class="card">
@@ -183,7 +214,7 @@
         <div class="dashboard-grid">
             <div class="card">
                 <h2>⚠️ Stok Menipis (< 5)</h2>
-                <div style="max-height: 250px; overflow-y: auto;">
+                <div class="table-responsive" style="max-height: 250px;">
                     <table>
                         <thead><tr><th>Barang</th><th>Sisa</th></tr></thead>
                         <tbody id="lowStockTable"><tr><td colspan="2" align="center">Memuat...</td></tr></tbody>
@@ -192,7 +223,7 @@
             </div>
             <div class="card">
                 <h2>👻 Dead Stock (Belum Laku)</h2>
-                <div style="max-height: 250px; overflow-y: auto;">
+                <div class="table-responsive" style="max-height: 250px;">
                     <table>
                         <thead><tr><th>Barang</th><th>Stok</th></tr></thead>
                         <tbody id="deadStockTable"><tr><td colspan="2" align="center">Memuat...</td></tr></tbody>
@@ -203,7 +234,7 @@
         
         <div class="card">
             <h2>📝 Log Penambahan Stok</h2>
-            <div style="max-height: 300px; overflow-y: auto;">
+            <div class="table-responsive" style="max-height: 300px;">
                 <table>
                     <thead><tr><th>Waktu</th><th>Barang</th><th>Jumlah</th></tr></thead>
                     <tbody id="logStokTable">
@@ -239,7 +270,7 @@
                 <input type="text" id="barcodeStok" placeholder="Barcode" class="barcode-input">
                 <button id="btnTambahStok">➕ Tambah</button>
             </div>
-            <div style="overflow-x: auto;">
+            <div class="table-responsive">
                 <table>
                     <thead>
                         <tr>
@@ -259,7 +290,11 @@
     </div>
 </div>
 
-
+<div class="mobile-nav">
+    <button class="mobile-btn active" data-tab="dashboard"><span>📊</span> Dashboard</button>
+    <button class="mobile-btn" data-tab="history"><span>📜</span> Histori</button>
+    <button class="mobile-btn" data-tab="stok"><span>📦</span> Stok</button>
+</div>
 
 <div id="modalRincianKeuangan" class="modal">
     <div class="modal-card">
@@ -319,6 +354,7 @@
         window.location.replace('index.html');
     });
 
+    // ✨ FUNGSI TAB BERLAKU UNTUK DESKTOP & MOBILE ✨
     const semuaTabBtn = document.querySelectorAll('.tab-btn, .mobile-btn');
     semuaTabBtn.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -430,7 +466,6 @@
                 document.getElementById('deadStockTable').innerHTML = dead.length > 0 ? dead.map(p => `<tr><td>${p.nama}</td><td><span class="badge-gray">${p.stok}</span></td></tr>`).join('') : `<tr><td colspan="2" align="center">Semua Terjual</td></tr>`;
             }
             
-            // Render Log Stok di Dashboard
             if (logData && logData.length > 0) {
                 document.getElementById('logStokTable').innerHTML = logData.slice(0, 10).map(l => `<tr><td>${new Date(l.created_at).toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'})}</td><td>${l.nama_barang}</td><td><strong style="color:#10b981;">+${l.jumlah_tambah}</strong></td></tr>`).join('');
             } else {
@@ -460,7 +495,6 @@
         }
     };
 
-    // ✨ PERBAIKAN FATAL ERROR TYPO ✨
     window.simpanEditProduk = async () => {
         try {
             const id = document.getElementById('editId').value;
@@ -472,13 +506,11 @@
             const stokBaru = parseInt(document.getElementById('editStok').value);
             const barcodeBaru = document.getElementById('editBarcode').value;
             
-            // Ubah text tombol biar kelihatan prosesnya
             document.getElementById('btnSimpanEdit').innerText = 'Memproses...';
             
             const upData = { nama: namaBaru, harga: hargaBaru, harga_modal: modalBaru, stok: stokBaru, barcode: barcodeBaru };
             await supabase.from('produk').update(upData).eq('id', id); 
             
-            // Typo L besar sudah diperbaiki: produkLama
             if (produkLama && stokBaru > produkLama.stok) {
                 const selisihTambah = stokBaru - produkLama.stok;
                 await supabase.from('log_stok').insert([{
@@ -490,13 +522,10 @@
             document.getElementById('modalEditProduk').style.display = 'none'; 
             document.getElementById('btnSimpanEdit').innerText = '💾 Simpan';
             
-            loadStok(); 
-            loadDashboardData(); 
+            loadStok(); loadDashboardData(); 
             alert("Data Berhasil Disimpan & Log Stok Diperbarui! ✅");
-
         } catch (error) {
-            console.error(error);
-            alert("Terjadi Kesalahan: " + error.message);
+            console.error(error); alert("Terjadi Kesalahan: " + error.message);
             document.getElementById('btnSimpanEdit').innerText = '💾 Simpan';
         }
     };
@@ -506,20 +535,15 @@
         const stokBaru = parseInt(document.getElementById('jumlahStok').value);
         
         const newData = { 
-            nama: namaBaru, 
-            harga: parseInt(document.getElementById('hargaStok').value), 
+            nama: namaBaru, harga: parseInt(document.getElementById('hargaStok').value), 
             harga_modal: parseInt(document.getElementById('hargaModalStok').value), 
-            stok: stokBaru, 
-            barcode: document.getElementById('barcodeStok').value 
+            stok: stokBaru, barcode: document.getElementById('barcodeStok').value 
         };
         
         await supabase.from('produk').insert([newData]); 
 
         if (stokBaru > 0) {
-            await supabase.from('log_stok').insert([{
-                nama_barang: namaBaru,
-                jumlah_tambah: stokBaru
-            }]);
+            await supabase.from('log_stok').insert([{ nama_barang: namaBaru, jumlah_tambah: stokBaru }]);
         }
         location.reload();
     };
