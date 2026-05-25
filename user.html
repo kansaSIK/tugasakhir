@@ -82,81 +82,136 @@
         @media print { body * { visibility: hidden; } #strukContent, #strukContent * { visibility: visible; } #strukContent { position: absolute; left: 0; top: 0; margin: 0; box-shadow: none; width: 100%; } }
 
         /* ==========================================
-           TEMA LIGHT (Otomatis jika selector light aktif)
+           RIWAYAT TRANSAKSI (USER PANEL) - BARU ✨
+        ========================================== */
+        .date-divider {
+            background: #f4eadc;
+            color: #8b5a3c;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin: 20px 0 12px;
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .riwayat-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            transition: 0.3s;
+        }
+        .riwayat-header {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+        .riwayat-items-table {
+            width: 100%;
+            margin: 10px 0;
+            font-size: 12px;
+            border-top: 1px dashed var(--border-color);
+            padding-top: 10px;
+            border-collapse: collapse;
+        }
+        .riwayat-items-table td {
+            padding: 4px 0;
+            border-bottom: none;
+            font-size: 12px;
+        }
+        .riwayat-footer { font-size: 13px; color: var(--text-color); }
+        .riwayat-footer-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
+        .riwayat-total-row {
+            display: flex; justify-content: space-between;
+            font-size: 15px;
+            margin-top: 10px; padding-top: 10px;
+            border-top: 2px solid var(--border-color);
+        }
+        .badge-metode {
+            display: inline-block;
+            font-size: 11px;
+            background: #f4eadc;
+            color: #8b5a3c;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 5px;
+            font-weight: bold;
+        }
+        #riwayatLoadingState {
+            text-align: center;
+            padding: 40px;
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        /* ==========================================
+           TEMA LIGHT
         ========================================== */
         [data-theme="light"] { --primary: #2563eb; --primary-hover: #1d4ed8; --bg-color: #f1f5f9; --card-bg: #ffffff; --text-color: #1e293b; --border-color: #e2e8f0; }
         
-        /* =======================================================
-           ✨ PERBAIKAN TOTAL DARK MODE (ABU-ABU SLATE & BIRU) ✨
-           ✨ SEMUA TULISAN MENJADI PUTIH JELAS ✨
-        ======================================================= */
+        /* ==========================================
+           TEMA DARK
+        ========================================== */
         [data-theme="dark"] { 
-            --primary: #3b82f6;       /* Biru Cerah untuk aksen */
-            --primary-hover: #60a5fa; /* Biru lebih muda saat hover */
-            --bg-color: #0f172a;     /* Abu-abu Slate Sangat Gelap (Latar) */
-            --card-bg: #1e293b;      /* Abu-abu Slate Sedang (Kartu/Panel) */
-            --text-color: #f1f5f9;   /* Putih Tulang (Hampir Putih, Jelas) */
-            --border-color: #334155; /* Abu-abu Slate Terang (Garis) */
+            --primary: #3b82f6;
+            --primary-hover: #60a5fa;
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f1f5f9;
+            --border-color: #334155;
         }
-        
-        /* Spesifik Komponen Dark Mode agar Tulisan Putih */
         [data-theme="dark"] body { color: var(--text-color); }
         [data-theme="dark"] h1, [data-theme="dark"] h2 { color: #ffffff !important; }
-        [data-theme="dark"] .header-title p { color: #cbd5e1; } /* Sub-judul sedikit abu terang */
-        [data-theme="dark"] .form-group label { color: #e2e8f0 !important; } /* Label form putih tulang */
-        
-        /* Tabel Dark Mode */
+        [data-theme="dark"] .header-title p { color: #cbd5e1; }
+        [data-theme="dark"] .form-group label { color: #e2e8f0 !important; }
         [data-theme="dark"] table thead th { background: #334155; color: #ffffff; border-bottom: 2px solid #475569; }
         [data-theme="dark"] tbody td { border-bottom: 1px solid #334155; color: var(--text-color); }
-        
-        /* Input & Dropdown Dark Mode */
         [data-theme="dark"] input, [data-theme="dark"] select { background: #0f172a; color: #ffffff; border: 1px solid #475569; }
         [data-theme="dark"] input::placeholder { color: #94a3b8; }
         [data-theme="dark"] input[readonly] { background-color: #1e293b; color: #cbd5e1; }
-        
-        /* Area Ringkasan Dark Mode */
         [data-theme="dark"] .summary-area { background: #1e293b; border-color: #475569; color: var(--text-color); }
         [data-theme="dark"] .summary-total { border-top-color: #475569; color: #ffffff; }
-        [data-theme="dark"] #rowDiskon { color: #4ade80 !important; } /* Hijau cerah untuk diskon di dark mode */
-        
-        /* Metode Pembayaran Dark Mode (Sesuai Gambar 2) */
+        [data-theme="dark"] #rowDiskon { color: #4ade80 !important; }
         [data-theme="dark"] .payment-method label { background: #334155; border-color: #475569; color: #ffffff; }
         [data-theme="dark"] .payment-method label:hover { background: #475569; }
-        
-        /* Panel QRIS & Bank Dark Mode */
         [data-theme="dark"] #qrisOption, [data-theme="dark"] #bankOption { background: #1e293b !important; border-color: #475569 !important; color: #ffffff !important; }
-        [data-theme="dark"] #qrisOption > div, [data-theme="dark"] #bankOption > div { background: #ffffff !important; border-color: #ffffff !important; padding: 15px; border-radius: 12px;} /* Kotak QR/Bank tetap putih agar kontras */
+        [data-theme="dark"] #qrisOption > div, [data-theme="dark"] #bankOption > div { background: #ffffff !important; border-color: #ffffff !important; padding: 15px; border-radius: 12px;}
         [data-theme="dark"] #qrisOption p, [data-theme="dark"] #bankOption label { color: #ffffff !important; }
-        [data-theme="dark"] #bankOption strong { color: #333 !important; } /* Tulisan BRI/BNI dalam kotak putih */
-        [data-theme="dark"] #bankOption span { color: #2563eb !important; }   /* Nomor rekening dalam kotak putih */
+        [data-theme="dark"] #bankOption strong { color: #333 !important; }
+        [data-theme="dark"] #bankOption span { color: #2563eb !important; }
         [data-theme="dark"] #bankOption div[style*="border-bottom: 1px dashed #ccc"] { border-color: #ddd !important; }
         [data-theme="dark"] #bankOption div[style*="background:#fcf9f5"] { background: #f1f5f9 !important; color: #555 !important; border-radius: 5px;}
-
-        /* Fix Barcode Dark Mode (Sesuai Gambar 1 - Latar Putih Supaya Bisa Discan) */
         [data-theme="dark"] .barcode-render { background-color: #ffffff !important; padding: 5px; border-radius: 8px; }
         [data-theme="dark"] .barcode-input { background: #0f172a; color: var(--primary); }
-
-        /* Modal Dark Mode */
         [data-theme="dark"] .modal-card { background: #1e293b; color: #ffffff; border: 1px solid #475569; }
         [data-theme="dark"] #uangTotalBelanja { color: #ffffff; }
-        [data-theme="dark"] #btnBatalUang { background: #475569; color: #ffffff; } /* Tombol batal abu */
+        [data-theme="dark"] #btnBatalUang { background: #475569; color: #ffffff; }
+
+        /* Dark mode: Riwayat Transaksi */
+        [data-theme="dark"] .date-divider { background: #334155; color: #cbd5e1; }
+        [data-theme="dark"] .riwayat-card { background: var(--card-bg); border-color: var(--border-color); }
+        [data-theme="dark"] .riwayat-items-table td { color: var(--text-color); }
+        [data-theme="dark"] .badge-metode { background: #334155; color: #cbd5e1; }
 
         /* ==========================================
-           TAMPILAN MOBILE (HP) RAPI & CENTER
+           TAMPILAN MOBILE
         ========================================== */
         .mobile-nav { display: none; }
 
         @media (max-width: 768px) {
             body { padding-bottom: 90px !important; } 
             .app-wrapper { padding: 10px; margin: 0; }
-            
-            /* ✨ FIX HEADER CENTER DI HP (GAMBAR 3) ✨ */
             .header { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 12px; padding-bottom: 15px; margin-bottom: 15px; width: 100%; }
             .header-title { display: flex; flex-direction: column; align-items: center; width: 100%; }
             .header-title h1 { font-size: 26px; margin: 0; width: 100%; text-align: center; }
             .header-title p { width: 100%; text-align: center; }
             .header-actions { justify-content: center; width: 100%; gap: 10px; display: flex; }
-            
             .theme-selector, .logout-btn { padding: 8px 5px; font-size: 13px; text-align: center; width: 48%; margin: 0; border-radius: 8px; }
             .two-columns { grid-template-columns: 1fr; gap: 15px; }
             .card { padding: 15px; border-radius: 12px; }
@@ -195,12 +250,15 @@
         </div>
     </div>
 
+    <!-- TAB NAVIGASI DESKTOP — ditambah tab Riwayat ✨ -->
     <div class="tab-nav">
         <button class="tab-btn active" data-tab="kasir">🧾 Kasir</button>
         <button class="tab-btn" data-tab="stok">📦 Info Stok</button>
         <button class="tab-btn" data-tab="barcode">🏷️ Barcode Produk</button>
+        <button class="tab-btn" data-tab="riwayat">📜 Riwayat Transaksi</button>
     </div>
 
+    <!-- PANEL: KASIR -->
     <div id="kasirPanel" class="panel active-panel">
         <div class="two-columns">
             <div class="card">
@@ -223,11 +281,9 @@
 
                 <div id="summaryArea" class="summary-area">
                     <div class="summary-row"><span>Subtotal:</span> <span id="txtSubtotal">Rp 0</span></div>
-                    
                     <div class="summary-row" id="rowDiskon" style="display:none; color: #28a745; font-weight: bold;">
                         <span>Diskon Promo (10%):</span> <span id="txtDiskon">- Rp 0</span>
                     </div>
-
                     <div class="summary-row"><span>PPN (11%):</span> <span id="txtPpn">Rp 0</span></div>
                     <div class="summary-total"><span>Total Akhir:</span> <span id="txtTotalAkhir">Rp 0</span></div>
                 </div>
@@ -242,37 +298,23 @@
                 
                 <div class="form-group" id="qrisOption" style="display:none; background:#f9f5f0; padding:20px; border-radius:12px; border: 1px solid var(--border-color); text-align:center;">
                     <label style="color:var(--primary); margin-bottom: 15px; font-size: 14px; display:block;">📱 Scan QRIS Berikut:</label>
-                    
                     <div style="background: white; display: inline-block; padding: 15px; border-radius: 12px; border: 2px solid var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg" alt="QRIS" style="width: 160px; height: 160px; object-fit: contain;">
                     </div>
-                    
                     <p style="font-size: 15px; color: #4a3b32; font-weight: 700; margin: 15px 0 5px;">Kantin Sija</p>
                     <p style="font-size: 12px; color: #888; margin: 0;">NMID: ID1029384756</p>
                 </div>
 
                 <div class="form-group" id="bankOption" style="display:none; background:#f9f5f0; padding:15px; border-radius:12px; border: 1px solid var(--border-color);">
                     <label style="color:var(--primary); margin-bottom: 10px; font-size: 14px; text-align:center; display:block;">💳 Informasi Rekening Transfer:</label>
-                    
                     <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 15px; font-size: 13px;">
-                        <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed #ccc; padding-bottom: 8px; margin-bottom: 8px;">
-                            <strong>BRI</strong> <span style="font-family: monospace; font-size: 14px; color:#b07848; font-weight:bold;">0123-456-789</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed #ccc; padding-bottom: 8px; margin-bottom: 8px;">
-                            <strong>BNI</strong> <span style="font-family: monospace; font-size: 14px; color:#b07848; font-weight:bold;">0987-654-321</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed #ccc; padding-bottom: 8px; margin-bottom: 8px;">
-                            <strong>MANDIRI</strong> <span style="font-family: monospace; font-size: 14px; color:#b07848; font-weight:bold;">1122-3344-5566</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed #ccc; padding-bottom: 8px; margin-bottom: 8px;">
-                            <strong>BTN</strong> <span style="font-family: monospace; font-size: 14px; color:#b07848; font-weight:bold;">9988-7766-5544</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between;">
-                            <strong>BSI</strong> <span style="font-family: monospace; font-size: 14px; color:#b07848; font-weight:bold;">1020-3040-5060</span>
-                        </div>
+                        <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed #ccc; padding-bottom: 8px; margin-bottom: 8px;"><strong>BRI</strong> <span style="font-family: monospace; font-size: 14px; color:#b07848; font-weight:bold;">0123-456-789</span></div>
+                        <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed #ccc; padding-bottom: 8px; margin-bottom: 8px;"><strong>BNI</strong> <span style="font-family: monospace; font-size: 14px; color:#b07848; font-weight:bold;">0987-654-321</span></div>
+                        <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed #ccc; padding-bottom: 8px; margin-bottom: 8px;"><strong>MANDIRI</strong> <span style="font-family: monospace; font-size: 14px; color:#b07848; font-weight:bold;">1122-3344-5566</span></div>
+                        <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed #ccc; padding-bottom: 8px; margin-bottom: 8px;"><strong>BTN</strong> <span style="font-family: monospace; font-size: 14px; color:#b07848; font-weight:bold;">9988-7766-5544</span></div>
+                        <div style="display: flex; justify-content: space-between;"><strong>BSI</strong> <span style="font-family: monospace; font-size: 14px; color:#b07848; font-weight:bold;">1020-3040-5060</span></div>
                         <div style="text-align: center; margin-top: 12px; font-size: 11px; color: #888; background:#fcf9f5; padding:5px; border-radius:5px;">a.n. Kantin Sija</div>
                     </div>
-                    
                     <label style="color:#666; margin-bottom: 5px; font-size: 12px;">Konfirmasi Bank yang dipakai pelanggan:</label>
                     <select id="bankTransfer" class="form-control">
                         <option value="BRI">BRI</option>
@@ -288,6 +330,7 @@
         </div>
     </div>
 
+    <!-- PANEL: INFO STOK -->
     <div id="stokPanel" class="panel">
         <div class="card">
             <h2>📦 Ketersediaan Stok</h2>
@@ -300,6 +343,7 @@
         </div>
     </div>
 
+    <!-- PANEL: BARCODE PRODUK -->
     <div id="barcodePanel" class="panel">
         <div class="card">
             <h2>🏷️ Daftar Barcode Produk Kantin Sija</h2>
@@ -311,14 +355,42 @@
             </div>
         </div>
     </div>
+
+    <!-- ✨ PANEL BARU: RIWAYAT TRANSAKSI ✨ -->
+    <div id="riwayatPanel" class="panel">
+        <div class="card">
+            <h2>📜 Riwayat Transaksi</h2>
+
+            <!-- Filter & Refresh -->
+            <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; align-items: center;">
+                <select id="filterRiwayat" class="form-control" style="max-width: 200px; margin-bottom: 0;">
+                    <option value="semua">📅 Semua Transaksi</option>
+                    <option value="hari_ini">🌅 Hari Ini</option>
+                    <option value="minggu_ini">📆 Minggu Ini</option>
+                    <option value="bulan_ini">🗓️ Bulan Ini</option>
+                </select>
+                <button id="btnRefreshRiwayat" style="background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; transition: 0.2s;">🔄 Refresh</button>
+                <span id="jumlahRiwayat" style="font-size: 13px; color: #888; margin-left: auto;"></span>
+            </div>
+
+            <!-- Konten Riwayat -->
+            <div id="riwayatList">
+                <div id="riwayatLoadingState">⏳ Memuat riwayat transaksi...</div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
+<!-- MOBILE NAVIGATION — ditambah tombol Riwayat ✨ -->
 <div class="mobile-nav">
     <button class="mobile-btn active" data-tab="kasir"><span>🧾</span> Kasir</button>
     <button class="mobile-btn" data-tab="stok"><span>📦</span> Info Stok</button>
     <button class="mobile-btn" data-tab="barcode"><span>🏷️</span> Barcode</button>
+    <button class="mobile-btn" data-tab="riwayat"><span>📜</span> Riwayat</button>
 </div>
 
+<!-- MODAL: KONFIRMASI UANG -->
 <div id="modalUang" class="modal">
     <div class="modal-card">
         <h3 style="color: var(--primary);">💵 Konfirmasi Uang</h3>
@@ -331,6 +403,7 @@
     </div>
 </div>
 
+<!-- MODAL: STRUK -->
 <div id="modalStruk" class="modal">
     <div style="display:flex; flex-direction:column; align-items:center; gap:15px; max-height: 90vh; width: 100%;">
         <div id="areaStrukLayout" style="overflow-y: auto; width: 100%; display: flex; justify-content: center; padding: 5px; box-sizing: border-box;"></div>
@@ -341,9 +414,65 @@
     </div>
 </div>
 
+<!-- ✅ Script TAB & TEMA dipisah dari module agar selalu berjalan meski module error -->
+<script>
+    // ==========================================
+    // TAB NAVIGASI — Script Biasa (Bukan Module)
+    // Dijalankan terpisah supaya tidak terganggu
+    // error import Supabase atau error lainnya.
+    // ==========================================
+    document.addEventListener('DOMContentLoaded', function () {
+        var semuaTabBtn = document.querySelectorAll('.tab-btn, .mobile-btn');
+
+        semuaTabBtn.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var targetTab = btn.getAttribute('data-tab');
+
+                // Hapus active dari semua tombol
+                semuaTabBtn.forEach(function (b) { b.classList.remove('active'); });
+
+                // Tandai semua tombol dengan data-tab yang sama sebagai active
+                document.querySelectorAll('[data-tab="' + targetTab + '"]').forEach(function (b) {
+                    b.classList.add('active');
+                });
+
+                // Sembunyikan semua panel
+                document.querySelectorAll('.panel').forEach(function (p) {
+                    p.classList.remove('active-panel');
+                });
+
+                // Tampilkan panel yang dipilih
+                var targetPanel = document.getElementById(targetTab + 'Panel');
+                if (targetPanel) targetPanel.classList.add('active-panel');
+
+                // Auto-load riwayat saat tab dibuka
+                if (targetTab === 'riwayat' && typeof window.loadRiwayat === 'function') {
+                    window.loadRiwayat();
+                }
+            });
+        });
+
+        // ==========================================
+        // TEMA — juga dipisah ke sini
+        // ==========================================
+        var dropdownTema = document.getElementById('pilihTema');
+        if (dropdownTema) {
+            dropdownTema.value = localStorage.getItem('kantin_tema') || 'vintage';
+            dropdownTema.addEventListener('change', function (e) {
+                var temaBaru = e.target.value;
+                document.documentElement.setAttribute('data-theme', temaBaru);
+                localStorage.setItem('kantin_tema', temaBaru);
+            });
+        }
+    });
+</script>
+
 <script type="module">
     import { supabase } from './script.js';
 
+    // ==========================================
+    // LOGOUT
+    // ==========================================
     document.getElementById('logoutBtn').addEventListener('click', async (e) => {
         e.preventDefault();
         const btnLogout = document.getElementById('logoutBtn');
@@ -355,27 +484,9 @@
         window.location.replace('index.html');
     });
 
-    const semuaTabBtn = document.querySelectorAll('.tab-btn, .mobile-btn');
-    semuaTabBtn.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const targetTab = btn.getAttribute('data-tab');
-            semuaTabBtn.forEach(b => b.classList.remove('active'));
-            document.querySelectorAll(`[data-tab="${targetTab}"]`).forEach(b => b.classList.add('active'));
-            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active-panel'));
-            document.getElementById(targetTab + 'Panel').classList.add('active-panel');
-        });
-    });
-
-    const dropdownTema = document.getElementById('pilihTema');
-    if (dropdownTema) {
-        dropdownTema.value = localStorage.getItem('kantin_tema') || 'vintage';
-        dropdownTema.addEventListener('change', (e) => {
-            const temaBaru = e.target.value;
-            document.documentElement.setAttribute('data-theme', temaBaru);
-            localStorage.setItem('kantin_tema', temaBaru);
-        });
-    }
-
+    // ==========================================
+    // METODE BAYAR (Show/Hide QRIS & Bank)
+    // ==========================================
     document.querySelectorAll('input[name="metode"]').forEach(radio => {
         radio.addEventListener('change', (e) => {
             const bayarMethod = e.target.value;
@@ -392,12 +503,18 @@
     document.getElementById('btnBatalUang').addEventListener('click', () => { document.getElementById('modalUang').style.display = 'none'; });
     document.getElementById('btnCetakStruk').addEventListener('click', () => { window.print(); });
 
+    // ==========================================
+    // VARIABEL KASIR
+    // ==========================================
     let daftarBelanja = [];
     let listStokData = [];
     let pendingTransaction = null;
     let editIndex = -1;
     const formatRp = (angka) => new Intl.NumberFormat('id-ID').format(angka);
 
+    // ==========================================
+    // LOAD DATA SISTEM (Stok & Barcode)
+    // ==========================================
     async function loadDataSistem() {
         try {
             const { data: { session }, error: errSession } = await supabase.auth.getSession();
@@ -423,6 +540,9 @@
     }
     loadDataSistem();
 
+    // ==========================================
+    // INPUT BARANG (Dropdown & Barcode)
+    // ==========================================
     document.getElementById('pilihBarang').addEventListener('change', (e) => {
         const opt = e.target.options[e.target.selectedIndex];
         document.getElementById('hargaBarang').value = opt.value ? formatRp(opt.dataset.harga) : '';
@@ -437,6 +557,9 @@
         else { document.getElementById('pilihBarang').selectedIndex = 0; document.getElementById('hargaBarang').value = 'Tidak ditemukan!'; }
     });
 
+    // ==========================================
+    // RENDER KASIR
+    // ==========================================
     window.renderKasir = function() {
         const tbody = document.getElementById('dataKasir');
         const summary = document.getElementById('summaryArea');
@@ -516,6 +639,9 @@
         renderKasir(); document.getElementById('barcodeBarang').focus();
     });
 
+    // ==========================================
+    // LANJUT PEMBAYARAN
+    // ==========================================
     document.getElementById('btnLanjut').addEventListener('click', () => {
         if (daftarBelanja.length === 0) return alert("Keranjang kosong!");
         
@@ -557,6 +683,9 @@
         tampilkanStruk();
     });
 
+    // ==========================================
+    // TAMPILKAN STRUK
+    // ==========================================
     function tampilkanStruk() {
         const dateStr = new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }).toUpperCase();
         const timeStr = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
@@ -594,6 +723,9 @@
         document.getElementById('modalStruk').style.display = 'flex';
     }
 
+    // ==========================================
+    // SELESAI TRANSAKSI (Simpan ke Supabase)
+    // ==========================================
     document.getElementById('btnSelesaiTransaksi').addEventListener('click', async () => {
         const btn = document.getElementById('btnSelesaiTransaksi');
         btn.innerText = "Menyimpan..."; btn.disabled = true;
@@ -620,6 +752,211 @@
             document.getElementById('modalStruk').style.display = 'none';
         } catch (error) { alert("🚨 ERROR:\n" + error.message); } finally { btn.innerText = "Tutup & Simpan ✅"; btn.disabled = false; }
     });
+
+
+    // ==========================================
+    // ✨ RIWAYAT TRANSAKSI — FUNGSI BARU ✨
+    // ==========================================
+
+    /**
+     * Helper: Mengubah tanggal ISO menjadi label yang mudah dibaca.
+     * Contoh: "Hari Ini", "Kemarin", atau tanggal lengkap.
+     */
+    function dapatkanLabelTanggal(waktuIso) {
+        const tglInput = new Date(waktuIso);
+        const tglSekarang = new Date();
+        const cekSama = (d1, d2) =>
+            d1.getDate() === d2.getDate() &&
+            d1.getMonth() === d2.getMonth() &&
+            d1.getFullYear() === d2.getFullYear();
+
+        if (cekSama(tglInput, tglSekarang)) return "Hari Ini";
+
+        const tglKemarin = new Date();
+        tglKemarin.setDate(tglSekarang.getDate() - 1);
+        if (cekSama(tglInput, tglKemarin)) return "Kemarin";
+
+        return tglInput.toLocaleDateString('id-ID', {
+            weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+        });
+    }
+
+    /**
+     * Helper: Filter transaksi berdasarkan pilihan dropdown.
+     */
+    function filterTransaksi(data, filter) {
+        if (!data) return [];
+        const sekarang = new Date();
+
+        if (filter === 'hari_ini') {
+            return data.filter(t => {
+                const tgl = new Date(t.created_at);
+                return tgl.toDateString() === sekarang.toDateString();
+            });
+        }
+        if (filter === 'minggu_ini') {
+            const hariIni = sekarang.getDay(); // 0=Minggu, 1=Senin, ...
+            const selisihKeSeninLalu = (hariIni === 0) ? 6 : hariIni - 1;
+            const mulaiMinggu = new Date(sekarang);
+            mulaiMinggu.setDate(sekarang.getDate() - selisihKeSeninLalu);
+            mulaiMinggu.setHours(0, 0, 0, 0);
+            return data.filter(t => new Date(t.created_at) >= mulaiMinggu);
+        }
+        if (filter === 'bulan_ini') {
+            return data.filter(t => {
+                const tgl = new Date(t.created_at);
+                return tgl.getMonth() === sekarang.getMonth() &&
+                       tgl.getFullYear() === sekarang.getFullYear();
+            });
+        }
+        // 'semua' — tidak difilter
+        return data;
+    }
+
+    /**
+     * Fungsi utama: Load & render riwayat transaksi.
+     * Diekspos ke window agar bisa dipanggil dari script non-module.
+     */
+    window.loadRiwayat = async function loadRiwayat() {
+        const container = document.getElementById('riwayatList');
+        const jumlahInfo = document.getElementById('jumlahRiwayat');
+        container.innerHTML = '<div id="riwayatLoadingState">⏳ Memuat riwayat transaksi...</div>';
+        jumlahInfo.innerText = '';
+
+        try {
+            const { data, error } = await supabase
+                .from('transactions')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) throw error;
+
+            const filterValue = document.getElementById('filterRiwayat').value;
+            const dataFiltered = filterTransaksi(data, filterValue);
+
+            if (!dataFiltered || dataFiltered.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align:center; padding: 50px 20px; color: #aaa;">
+                        <div style="font-size: 48px; margin-bottom: 15px;">🗂️</div>
+                        <p style="font-size: 15px; font-weight: 600;">Belum ada riwayat transaksi.</p>
+                        <p style="font-size: 13px;">Transaksi yang telah disimpan akan muncul di sini.</p>
+                    </div>`;
+                jumlahInfo.innerText = '0 transaksi ditemukan';
+                return;
+            }
+
+            jumlahInfo.innerText = `${dataFiltered.length} transaksi ditemukan`;
+
+            let htmlFinal = '';
+            let labelTanggalTerakhir = '';
+
+            dataFiltered.forEach(t => {
+                // ---- Label Pemisah Tanggal ----
+                const labelSekarang = dapatkanLabelTanggal(t.created_at);
+                if (labelSekarang !== labelTanggalTerakhir) {
+                    labelTanggalTerakhir = labelSekarang;
+                    htmlFinal += `<div style="width:100%; text-align:left; margin-top: ${htmlFinal === '' ? '0' : '10px'};">
+                        <span class="date-divider">📅 ${labelSekarang}</span>
+                    </div>`;
+                }
+
+                // ---- Baris Item dalam Transaksi ----
+                let itemsHtml = '<table class="riwayat-items-table">';
+                if (t.items && Array.isArray(t.items) && t.items.length > 0) {
+                    itemsHtml += t.items.map(i => `
+                        <tr>
+                            <td style="width: 10%; color: var(--primary); font-weight: bold;">${i.jumlah}x</td>
+                            <td style="width: 55%;">
+                                ${i.nama}
+                                ${i.barcode ? `<br><small style="font-family: monospace; color: var(--primary); font-weight: bold; opacity: 0.8;">${i.barcode}</small>` : ''}
+                            </td>
+                            <td style="width: 35%; text-align: right; font-weight: 600;">
+                                Rp ${formatRp((i.price || i.harga) * i.jumlah)}
+                            </td>
+                        </tr>`).join('');
+                } else {
+                    itemsHtml += `<tr><td colspan="3" style="color:#888; font-style:italic;">(Detail item tidak tersedia)</td></tr>`;
+                }
+                itemsHtml += '</table>';
+
+                // ---- Info Bank jika Transfer ----
+                const bankInfo = t.bank
+                    ? `<span class="badge-metode">${t.bank}</span>`
+                    : '';
+
+                // ---- Ikon Metode Bayar ----
+                const ikonMetode = {
+                    'Cash': '💵', 'QRIS': '📱', 'Transfer': '🏦', 'Debit': '💳'
+                }[t.metode] || '💳';
+
+                // ---- Kembalian (hanya tampil jika > 0) ----
+                const kembalianHtml = (t.kembalian && t.kembalian > 0)
+                    ? `<div class="riwayat-footer-row">
+                            <span style="opacity:0.8;">🔄 Kembalian:</span>
+                            <span>Rp ${formatRp(t.kembalian)}</span>
+                       </div>`
+                    : '';
+
+                // ---- Uang Diterima ----
+                const uangDiterimaHtml = (t.uang_diterima && t.uang_diterima > 0)
+                    ? `<div class="riwayat-footer-row">
+                            <span style="opacity:0.8;">💵 Uang Diterima:</span>
+                            <span>Rp ${formatRp(t.uang_diterima)}</span>
+                       </div>`
+                    : '';
+
+                // ---- Waktu ----
+                const jamStr = new Date(t.created_at).toLocaleTimeString('id-ID', {
+                    hour: '2-digit', minute: '2-digit'
+                });
+
+                htmlFinal += `
+                    <div class="riwayat-card">
+                        <div class="riwayat-header">
+                            <strong style="color: var(--primary); font-size: 15px;">🛒 ${t.order_number}</strong>
+                            <span style="font-size: 12px; color: #94a3b8;">🕐 ${jamStr}</span>
+                        </div>
+
+                        ${itemsHtml}
+
+                        <div class="riwayat-footer">
+                            <div class="riwayat-footer-row">
+                                <span style="opacity:0.8;">${ikonMetode} Metode Bayar:</span>
+                                <strong>${t.metode} ${bankInfo}</strong>
+                            </div>
+                            ${uangDiterimaHtml}
+                            ${kembalianHtml}
+                            <div class="riwayat-total-row">
+                                <strong>TOTAL TRANSAKSI:</strong>
+                                <strong style="color: #10b981; font-size: 16px;">Rp ${formatRp(t.total_akhir)}</strong>
+                            </div>
+                        </div>
+                    </div>`;
+            });
+
+            container.innerHTML = htmlFinal;
+
+        } catch (err) {
+            console.error(err);
+            container.innerHTML = `
+                <div style="text-align:center; padding: 40px; color: #dc3545;">
+                    <div style="font-size: 40px;">🚨</div>
+                    <p style="font-weight: 600;">Gagal memuat riwayat transaksi.</p>
+                    <p style="font-size: 13px; color: #aaa;">${err.message}</p>
+                </div>`;
+        }
+    }
+
+    // Tombol Refresh Riwayat
+    document.getElementById('btnRefreshRiwayat').addEventListener('click', () => {
+        loadRiwayat();
+    });
+
+    // Filter berubah → otomatis reload
+    document.getElementById('filterRiwayat').addEventListener('change', () => {
+        loadRiwayat();
+    });
+
 </script>
 </body>
 </html>
